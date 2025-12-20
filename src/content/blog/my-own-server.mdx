@@ -1,0 +1,96 @@
+---
+title: "Mi servidor personal no es una buena idea (y por eso lo hice)"
+description: "Desde afuera, armar un servidor propio parece innecesario. Desde adentro, es una fuente constante de aprendizaje y fricción. Acá escribo sobre qué me llevó a hostear yo mismo, qué usos reales tiene hoy mi servidor y qué me enseñó enfrentar problemas de infraestructura sin abstraerlos detrás de un proveedor."
+category: "Tecnología"
+timeToRead: 6
+pubDate: "2025-12-25"
+tags: ["Servidor Personal", "Tecnología", "Reflexiones"]
+enabled: true
+---
+
+# Introducción
+
+Desde hace muchos años intento incursionar en la nube. Comencé comprando suscripciones anuales en Hostinger, cuando recién aprendía PHP—lenguaje al que le guardo mucho cariño. También descubrí el mundo de los _Cloud Computing_, donde creé instancias en AWS y GCP. Por otro lado, hace menos de un año descubrí Vercel y similares: productos como servicios que fácilitan enormemente el despliegue de aplicaciones web. Pero, ¿qué hacen internamente?
+
+# Motivación
+
+Mi idea principal era tener un entorno de pruebas que no dependa de gastos innecesarios o facturas que me agarren por sorpresa. En AWS, una instancia de EC2 no genera costos si está apagada. Pero, ¿sabías que las IP elásticas en AWS generan un costo silencioso cuando no se usan? Y desde ahí, existen un montón de ejemplos más: ha habido casos donde Vercel envía facturas gigantes por uso de red a usuarios luego de ataques o picos de tráfico inesperados (incluyendo _DDoS_).
+
+La motivación de este proyecto nunca fue reemplazar ninguna de estas soluciones. Nunca se me pasaría por la cabeza competir con _hyperscalers_. Pero si me interesó la idea de tener un entorno personal en la nube, donde pueda levantar aplicaciones de uso propio (o familiar), y no me preocupe por gastos repentinos más allá de un incremento en la factura de la luz.
+
+## Objetivos iniciales
+
+En realidad, en un inicio no tenía un _roadmap_ claro. Simplemente tenía el "capricho" de tener mi propia infraestructura y no depender de nadie. Lo que más tenía ganas era hospedar mi propio _Google Drive_ en la nube. Es por esto que, lo primero que hice ni bien entendí qué estaba haciendo, fue desplegar [NextCloud](https://nextcloud.com/). Curiosamente, en el proceso me enteré que estaba escrito en PHP, por lo que pude fácilmente clonar el repositorio y hacer mis propias modificaciones.
+
+# Elección de hardware
+
+Durante el inicio, lo último que quería era gastar decenas de miles de dólares. Un servidor de un datacenter real, puede llegar a costar más de diez mil dólares. Mi alcance era mucho menor, no solo porque no tenía ese dinero, sino porque sentía que no lo valía para lo que yo quería hacer. Entonces, intenté buscar componentes de fácil acceso al público, al mismo tiempo de que sean lo suficientemente potentes como para poder explotarlos sin quedarme corto.
+
+Resumidamente, esto es lo que tuvo mi servidor en un inicio:
+
+- AsRock B450M PRO 4
+- AMD Ryzen 5 3600 de 6 núcleos y 12 hilos
+- 2x 8GB RAM DDR4 a 3200MHz
+- 2x Crucial MX500 de 1TB cada uno
+- 1x SSD Crucial P3 NVMe M.2 de 500GB
+- Fuente EVGA 500 GE 80 Plus Gold de 500W
+
+En total, me costó aproximadamente $506 (sin contar costos de importación). Esto equivale a cerca de:
+
+- 7 meses de una instancia _t3.large_ en AWS
+- 8 a 9 meses de una instancia _e2-standard-2_ de GCP
+- 6 meses de Azure VM con solo 2 vCPU y 8 GB de RAM
+
+**Nota**: recordemos que mi objetivo nunca fue suplantarlos ni desplegar aplicaciones de producción en mi servidor; pero comparar precios es interesante para ver lo "barato" que es tener un servidor físico vs. contratar servicios de _Cloud Computing_.
+
+# Windows Server: por qué lo elegí y por qué lo abandoné
+
+Mi primera experiencia laboral fue utilizando _ASP.Net_ y _Blazor_, y comencé a sentirme muy cómodo con el entorno de Windows Server, Visual Studio e IIS.
+
+Al poco tiempo de instalar mi servidor, un amigo mío me pidió que le desarrolle un e-commerce para su negocio; y no tuve mejor idea que hacer el _backend_ con _ASP.Net_. Tiempo después, me topé con una gran barrera: **las licencias**.
+
+Si bien Microsoft ofrecía una excelente interfaz gráfica para el mantenimiento de un servidor con aplicaciones web, exigía no solo que dicho Windows Server cuente con una licencia, sino que su ecosistema de licencias de Microsoft se volvió un problema real. Y mi primer pensamiento fue: "yo uso _ASP.Net_, y en ese momento, mi percepción (y mi experiencia) era que _ASP.Net_ no se llevaba bien con Linux" → me casé con Windows Server.
+
+## Problemas que ocurrieron
+
+### Recursos
+
+Aunque mi objetivo no era hacer algo super profesional, a mi me encanta dar lo mejor que puedo. Y hay una frase que me encanta mucho:
+
+> Todo lo medible es perfectible — Gil Garza
+
+Resulta que—por sorpresa de nadie—Windows incurre en un montón de recursos innecesariamente. Hay bastantes servicios corriendo en segundo plano, interfaz gráfica, telemetría, etc.
+
+Tenía ganas de instalar [Metricbeat](https://www.elastic.co/beats/metricbeat) de Elastic Stack. ¿La mala noticia? De por sí Windows Server gastaba un montón de RAM—sumale el uso de Metricbeat...
+
+### Licencia del server vs. licencias de acceso remoto
+
+Microsoft separa el derecho a tener un servidor del derecho de usarlo. Te cobran por cores, el servidor inicia pero aún no tenés la posibilidad de ingresar.
+
+Es ahí donde ingresan las _CALs_ (o permiso para respirar). Estas habilitan personas: cada vez que un usuario o dispositivo accede a archivos o servicios del sistema, necesita una CAL—independientemente de si entró solo 5 minutos, fue una API o un script. ¿Y lo peor de todo? Windows no te frena técnicamente; el problema aparece cuando hay una auditoría.
+
+Y no hablemos del RDS, eso ya es un abuso total: doble peaje.
+
+### Razón principal para irme de Windows Server
+
+Mi objetivo era tener una nube, donde no reciba gastos inesperados y pueda entrar y ejecutar todo lo que quiera sin que nadie me diga qué puedo o no hacer.
+
+Es por esto que decidí que Windows no ofrecía la libertad que yo estaba buscando desde un inicio.
+
+# Migración a Debian
+
+
+
+# Seguridad (lo mínimo indispensable)
+
+# IP dinámica, port forwarding y más problemas
+
+# Qué estoy ejecutando hoy en el servidor
+
+# Ideas a futuro
+
+# Conclusión
+
+## Nota final
+
+> ...

@@ -1,0 +1,18 @@
+---
+interface Props {
+  tag: string;
+  isPrimary?: boolean;
+}
+
+const { tag, isPrimary = false } = Astro.props as Props;
+---
+
+<span
+  class={`${
+    isPrimary
+      ? "bg-gray-800 text-white"
+      : "bg-gray-50 text-gray-800 border border-gray-800"
+  } text-sm font-medium px-3 py-2 rounded-[1px]`}
+>
+  {tag}
+</span>
