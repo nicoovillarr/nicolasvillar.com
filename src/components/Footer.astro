@@ -1,8 +1,39 @@
-<footer class="h-20 border-t border-gray-400">
-  <div class="mx-auto content flex h-full items-center justify-center">
-    <p class="text-sm text-gray-600">
-      © {new Date().getFullYear()} Nicolás Villar. Algunos derechos reservados,
-      otros se me olvidaron.
-    </p>
+---
+import FooterLinks from "./FooterLinks.astro";
+---
+
+<footer class="border-t border-gray-400 py-8">
+  <div class="mx-auto content h-full flex justify-between">
+    <div>
+      <p class="text-sm text-gray-600">
+        © {new Date().getFullYear()} Nicolás Villar. Algunos derechos reservados.
+      </p>
+      <a
+        href="mailto:nicolasvillar00@gmail.com"
+        class="text-sm text-gray-600 hover:underline"
+      >
+        nicolasvillar00@gmail.com
+      </a>
+    </div>
+
+    <FooterLinks
+      title="Links"
+      links={[
+        { text: "Inicio", href: "/" },
+        { text: "Blog", href: "/blog" },
+        { text: "Contacto", href: "/contacto" },
+      ]}
+    />
+
+    <FooterLinks
+      title="Redes Sociales"
+      links={[
+        { text: "GitHub", href: "https://github.com/nicoovillarr" },
+        {
+          text: "LinkedIn",
+          href: "https://www.linkedin.com/in/nicol%C3%A1s-villar/",
+        },
+      ]}
+    />
   </div>
 </footer>
