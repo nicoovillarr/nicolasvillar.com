@@ -2,13 +2,14 @@
 import { getCollection } from "astro:content";
 import Layout from "../../components/Layout.astro";
 import PostCard from "../../components/PostCard.astro";
+import { SITE_TITLE } from "../../consts";
 
 const posts = (await getCollection("blog"))
   .filter((post) => post.data.enabled !== false)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<Layout>
+<Layout title={`Un poco sobre mí | ${SITE_TITLE}`}>
   <main class="content">
     <section class="mb-16 pb-8 border-b border-gray-300">
       <h1 class="mb-4 text-5xl md:text-6xl font-normal">Un poco sobre mí</h1>

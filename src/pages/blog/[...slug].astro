@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BlogPost from "../../components/BlogPost.astro";
 import Layout from "../../components/Layout.astro";
+import { SITE_TITLE } from "../../consts";
 
 export const prerender = true;
 
@@ -25,7 +26,10 @@ if (post.data.enabled === false) {
 const { Content } = await render(post);
 ---
 
-<Layout>
+<Layout
+  title={`${post.data.title} | ${SITE_TITLE}`}
+  description={post.data.description}
+>
   <BlogPost {...post.data}>
     <Content />
   </BlogPost>
