@@ -1,0 +1,35 @@
+---
+interface Props {
+  index: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  projectUrl: string;
+}
+
+const { index, title, description, imageUrl, projectUrl } = Astro.props;
+---
+
+<article
+  class={`flex items-start mb-8 ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}
+>
+  <img
+    src={imageUrl}
+    alt={title}
+    class="w-32 h-32 shrink-0 object-cover mr-6 border border-gray-200 rounded-md p-2"
+  />
+
+  <div>
+    <h3 class="text-xl">{title}</h3>
+    <p class="text-lg">{description}</p>
+
+    <a
+      href={projectUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-blue-500 hover:text-blue-700 mt-2 inline-block"
+    >
+      Visitar →
+    </a>
+  </div>
+</article>

@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
+import TagBox from "./TagBox.astro";
+import Prose from "./Prose.astro";
+
+type Props = CollectionEntry<"blog">["data"];
+const { title, description, category, timeToRead, pubDate, updatedDate, tags } =
+  Astro.props;
+console.log(pubDate);
+---
+
+<article class="content">
+  <header class="mb-12 pb-12 border-b border-gray-300">
+    <aside class="flex text-muted mb-2">
+      <FormattedDate date={pubDate} />
+      <span class="mx-2">•</span>
+      <span>{timeToRead} min</span>
+    </aside>
+
+    <Prose>
+      <h1>{title}</h1>
+
+      <p class="description text-gray-600">{description}</p>
+
+      {
+        updatedDate && updatedDate !== pubDate ? (
+          <p class="text-sm text-gray-500 mt-2">
+            Última actualización: <FormattedDate date={updatedDate} />
+          </p>
+        ) : null
+      }
+    </Prose>
+
+    <aside class="flex flex-wrap gap-2 mt-8">
+      {category && <TagBox tag={category} isPrimary={true} />}
+      {tags?.map((tag) => <TagBox tag={tag} />)}
+    </aside>
+  </header>
+  <Prose>
+    <slot />
+  </Prose>
+</article>

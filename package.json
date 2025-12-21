@@ -1,5 +1,5 @@
 {
-  "name": "nicolasvillar.com",
+  "name": "blog",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,8 +9,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.13",
-    "astro": "^5.13.5",
-    "tailwindcss": "^4.1.13"
+    "@astrojs/mdx": "4.3.13",
+    "@astrojs/vercel": "9.0.2",
+    "@tailwindcss/vite": "4.1.18",
+    "astro": "5.16.6",
+    "resend": "6.6.0",
+    "tailwindcss": "4.1.18"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "0.5.19"
   }
 }

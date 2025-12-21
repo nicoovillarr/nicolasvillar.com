@@ -1,1 +1,50 @@
 @import "tailwindcss";
+@plugin '@tailwindcss/typography';
+
+@layer base {
+  body {
+    @apply font-serif;
+  }
+}
+
+@theme {
+  --color-muted: #5d636e;
+}
+
+@layer utilities {
+  .content {
+    width: calc(100vw - 2rem);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 640px) {
+    .content {
+      width: 28rem; /* sm:w-112 → 112 * 0.25rem = 28rem */
+    }
+  }
+
+  @media (min-width: 768px) {
+    .content {
+      width: 36rem; /* md:w-144 → 144 * 0.25rem = 36rem */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .content {
+      width: 50rem; /* lg:w-200 → 200 * 0.25rem = 50rem */
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .content {
+      width: 66.666667%;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .content {
+      width: 50%;
+    }
+  }
+}
