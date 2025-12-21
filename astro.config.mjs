@@ -11,7 +11,7 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://nicoovillarr.com",
+  site: "https://nicolasvillar.com",
 
   output: "server",
   adapter: vercel(),
