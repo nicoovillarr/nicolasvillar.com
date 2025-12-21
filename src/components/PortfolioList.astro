@@ -1,0 +1,35 @@
+---
+import PortfolioItem from "./PortfolioItem.astro";
+import Fendis from "../assets/fendis.webp";
+
+const projects: {
+  title: string;
+  description: string;
+  imageUrl: string;
+  link: string;
+}[] = [
+  {
+    title: "Fendis",
+    description:
+      "Le armé una web a un amigo para digitalizar su negocio. Me encargué de todo: desde el diseño de la interfaz y la base de datos hasta el despliegue en un servidor Linux. Después de un mes de idas y vueltas, la pusimos en marcha y las ventas subieron un 20%. Fue genial ver cómo una idea se transformaba en una herramienta real que ayudó a su negocio a crecer.",
+    imageUrl: Fendis.src,
+    link: "https://www.fendis.uy/",
+  },
+];
+---
+
+<section class="space-y-8">
+  <h2 class="text-3xl font-semibold">Lo que he construido</h2>
+
+  {
+    projects.map((project, index) => (
+      <PortfolioItem
+        index={index}
+        title={project.title}
+        description={project.description}
+        imageUrl={project.imageUrl}
+        projectUrl={project.link}
+      />
+    ))
+  }
+</section>

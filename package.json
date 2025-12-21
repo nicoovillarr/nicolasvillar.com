@@ -12,6 +12,7 @@
     "@astrojs/mdx": "4.3.13",
     "@tailwindcss/vite": "4.1.18",
     "astro": "5.16.6",
+    "resend": "6.6.0",
     "tailwindcss": "4.1.18"
   },
   "devDependencies": {

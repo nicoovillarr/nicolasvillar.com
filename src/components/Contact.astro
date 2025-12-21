@@ -1,0 +1,82 @@
+---
+import { subjects } from "../consts";
+import Input from "./Input.astro";
+import Select from "./Select.astro";
+---
+
+<section id="contact">
+  <h2 class="text-3xl font-semibold mb-6">Contactame</h2>
+
+  <form id="contact-form" class="flex flex-col gap-y-2">
+    <Input
+      label="Nombre"
+      name="name"
+      placeholder="Tu nombre completo"
+      required
+    />
+
+    <Input
+      label="Correo Electrónico"
+      type="email"
+      name="email"
+      placeholder="Tu correo electrónico"
+      required
+    />
+
+    <Select
+      label="Asunto"
+      name="subject"
+      options={subjects}
+      placeholder="Selecciona un asunto..."
+      required
+    />
+
+    <Input
+      label="Mensaje"
+      type="multiline"
+      name="message"
+      placeholder="Escribe tu mensaje aquí..."
+      maxLength={500}
+      required
+    />
+
+    <button
+      type="submit"
+      class="mt-4 w-fit ml-auto bg-linear-to-br from-gray-800 to-gray-700 px-8 py-3 rounded-lg text-white cursor-pointer hover:opacity-90"
+    >
+      Enviar Mensaje
+    </button>
+
+    <p id="status-msg" class="text-sm ml-auto hidden"></p>
+  </form>
+</section>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement;
+  const statusMsg = document.getElementById("status-msg");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    const data = Object.fromEntries(formData);
+
+    statusMsg!.textContent = "Enviando...";
+    statusMsg!.classList.remove("hidden");
+
+    const response = await fetch("/api/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      statusMsg!.textContent = "¡Gracias! Te responderé pronto.";
+      form.reset();
+    } else {
+      statusMsg!.textContent = "Hubo un error, intentá de nuevo.";
+    }
+  });
+</script>

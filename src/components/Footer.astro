@@ -8,12 +8,6 @@ import FooterLinks from "./FooterLinks.astro";
       <p class="text-sm text-gray-600">
         © {new Date().getFullYear()} Nicolás Villar. Algunos derechos reservados.
       </p>
-      <a
-        href="mailto:nicolasvillar00@gmail.com"
-        class="text-sm text-gray-600 hover:underline"
-      >
-        nicolasvillar00@gmail.com
-      </a>
     </div>
 
     <FooterLinks
@@ -21,18 +15,19 @@ import FooterLinks from "./FooterLinks.astro";
       links={[
         { text: "Inicio", href: "/" },
         { text: "Blog", href: "/blog" },
-        { text: "Contacto", href: "/contacto" },
+        { text: "Contacto", href: "/#contact" },
       ]}
     />
 
     <FooterLinks
-      title="Redes Sociales"
+      title="Contactame"
       links={[
         { text: "GitHub", href: "https://github.com/nicoovillarr" },
         {
           text: "LinkedIn",
           href: "https://www.linkedin.com/in/nicol%C3%A1s-villar/",
         },
+        { text: "yo@nicolasvillar.com", href: "mailto:yo@nicolasvillar.com" },
       ]}
     />
   </div>

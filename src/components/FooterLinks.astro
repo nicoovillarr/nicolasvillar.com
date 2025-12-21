@@ -7,7 +7,7 @@ interface Props {
 const { title, links } = Astro.props;
 ---
 
-<div>
+<article>
   <h3 class="font-semibold mb-2">{title}</h3>
   <ul class="space-y-1">
     {
@@ -23,4 +23,4 @@ const { title, links } = Astro.props;
       ))
     }
   </ul>
-</div>
+</article>

@@ -9,6 +9,8 @@ import mdx from "@astrojs/mdx";
 export default defineConfig({
   site: "https://www.nicoovillarr.com",
 
+  output: "server",
+
   vite: {
     plugins: [tailwindcss()],
   },

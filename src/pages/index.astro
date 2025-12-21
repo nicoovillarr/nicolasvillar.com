@@ -1,9 +1,30 @@
 ---
+import CareerExperience from "../components/CareerExperience.astro";
+import Contact from "../components/Contact.astro";
+import Hero from "../components/Hero.astro";
 import Layout from "../components/Layout.astro";
+import Now from "../components/Now.astro";
+import PortfolioList from "../components/PortfolioList.astro";
 ---
 
 <Layout>
   <main class="content">
-    <h1>Hola, mundo!</h1>
+    <Hero />
+
+    <div class="my-14"></div>
+
+    <PortfolioList />
+
+    <div class="w-12 h-px bg-muted my-10"></div>
+
+    <Now />
+
+    <div class="w-12 h-px bg-muted my-10"></div>
+
+    <CareerExperience />
+
+    <div class="w-12 h-px bg-muted my-10"></div>
+
+    <Contact />
   </main>
 </Layout>

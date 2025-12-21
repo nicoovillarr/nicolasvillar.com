@@ -7,6 +7,7 @@ import Prose from "./Prose.astro";
 type Props = CollectionEntry<"blog">["data"];
 const { title, description, category, timeToRead, pubDate, updatedDate, tags } =
   Astro.props;
+console.log(pubDate);
 ---
 
 <article class="content">
