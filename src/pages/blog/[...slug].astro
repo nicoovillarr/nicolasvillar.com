@@ -3,22 +3,21 @@ import { getCollection, render } from "astro:content";
 import BlogPost from "../../components/BlogPost.astro";
 import Layout from "../../components/Layout.astro";
 
-// 1. Esto le dice a Astro: "Genera esto en el build y mételo en el sitemap"
 export const prerender = true;
 
-// 2. Esto es OBLIGATORIO si usas prerender en una ruta con [brackets]
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post) => ({
+
+  const visiblePosts = posts.filter((post) => post.data.enabled !== false);
+
+  return visiblePosts.map((post) => ({
     params: { slug: post.id },
-    props: { post }, // Pasamos el post como prop
+    props: { post },
   }));
 }
 
-// 3. Obtenemos el post de las props (en modo prerender se usa así)
 const { post } = Astro.props;
 
-// 4. Tu lógica de habilitado
 if (post.data.enabled === false) {
   return new Response(null, { status: 404 });
 }
