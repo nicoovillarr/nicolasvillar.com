@@ -66,3 +66,20 @@ const {
     ],
   })}
 />
+
+<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-WJVWNT02YE"
+></script>
+<script is:inline>
+  function setupGA() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-WJVWNT02YE");
+  }
+
+  setupGA();
+
+  document.addEventListener("astro:after-swap", setupGA);
+</script>
