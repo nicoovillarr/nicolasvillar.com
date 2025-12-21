@@ -7,6 +7,8 @@ import mdx from "@astrojs/mdx";
 
 import vercel from "@astrojs/vercel";
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.nicoovillarr.com",
@@ -18,5 +20,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [mdx()],
+  integrations: [mdx(), sitemap()],
 });
