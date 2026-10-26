@@ -1,35 +1,66 @@
 ---
+import type { ImageMetadata } from "astro";
 import PortfolioItem from "./PortfolioItem.astro";
+import EnLaGondola from "../assets/enlagondola.svg";
 import Fendis from "../assets/fendis.webp";
+import Marppa from "../assets/marppa.svg";
+import Trgtz from "../assets/trgtz.png";
 
 const projects: {
   title: string;
   description: string;
-  imageUrl: string;
-  link: string;
+  image: ImageMetadata;
+  status?: string;
+  stack: string[];
+  links: { text: string; href: string }[];
 }[] = [
+  {
+    title: "EnLaGóndola",
+    description:
+      "El SaaS que estoy construyendo ahora: una app que te dice exactamente en qué góndola del súper está lo que buscás, con un mapa virtual de la tienda y búsqueda en tiempo real. Del otro lado, cada supermercado tiene un panel web multi-tenant para cargar productos, precios, promociones y el mapa de sus sucursales, y analytics de qué buscan sus clientes y qué no encuentran.",
+    image: EnLaGondola,
+    status: "Próximamente",
+    stack: ["Flutter", "NestJS", "Next.js", "PostgreSQL", "Prisma", "Redis"],
+    links: [{ text: "Sitio", href: "https://enlagondola.com" }],
+  },
+  {
+    title: "Marppa Cloud",
+    description:
+      "Mi propia plataforma cloud: el panel de control del que hablo en el post de mi servidor. Automatiza lo que antes hacía a mano por terminal: levanta máquinas virtuales con libvirt, arma las redes y reglas de nftables y gestiona todo desde un panel web, con tareas en cola y actualizaciones en tiempo real por WebSocket.",
+    image: Marppa,
+    stack: ["NestJS", "Next.js", "PostgreSQL", "Redis", "libvirt"],
+    links: [
+      { text: "Sitio", href: "https://cloud.marppa.com" },
+      { text: "Código", href: "https://github.com/nicoovillarr/marppa-cloud" },
+      { text: "Post", href: "/blog/mi-propio-servidor" },
+    ],
+  },
+  {
+    title: "Trgtz",
+    description:
+      "App móvil para definir tus metas del año, compartirlas con amigos y celebrar cada logro juntos. La hice de punta a punta, desde la idea hasta producción: el esquema de la base de datos, la API REST, la app multiplataforma, CI/CD y tests unitarios.",
+    image: Trgtz,
+    stack: ["Flutter", "NestJS", "PostgreSQL", "AWS"],
+    links: [
+      { text: "Sitio", href: "https://www.trgtz.com" },
+      { text: "Código", href: "https://github.com/nicoovillarr/trgtz" },
+    ],
+  },
   {
     title: "Fendis",
     description:
-      "Le armé una web a un amigo para digitalizar su negocio. Me encargué de todo: desde el diseño de la interfaz y la base de datos hasta el despliegue en un servidor Linux. Después de un mes de idas y vueltas, la pusimos en marcha y las ventas subieron un 20%. Fue genial ver cómo una idea se transformaba en una herramienta real que ayudó a su negocio a crecer.",
-    imageUrl: Fendis.src,
-    link: "https://www.fendis.uy/",
+      "Le armé a un amigo una plataforma de e-commerce y gestión para digitalizar su negocio. Me encargué de todo: el diseño de la interfaz, la base de datos, el backend y la infraestructura. El checkout manda el pedido directo por WhatsApp, y en el primer mes después del lanzamiento las ventas subieron un 20%. Fue genial ver cómo una idea se transformaba en una herramienta real que ayudó a su negocio a crecer.",
+    image: Fendis,
+    stack: ["Next.js", "Prisma", "PostgreSQL", "AWS S3"],
+    links: [{ text: "Sitio", href: "https://www.fendis.uy/" }],
   },
 ];
 ---
 
-<section class="space-y-8">
-  <h2 class="text-3xl font-semibold">Lo que he construido</h2>
+<section>
+  <h2 class="text-3xl font-semibold mb-8">Lo que he construido</h2>
 
-  {
-    projects.map((project, index) => (
-      <PortfolioItem
-        index={index}
-        title={project.title}
-        description={project.description}
-        imageUrl={project.imageUrl}
-        projectUrl={project.link}
-      />
-    ))
-  }
+  <div class="space-y-10">
+    {projects.map((project) => <PortfolioItem {...project} />)}
+  </div>
 </section>

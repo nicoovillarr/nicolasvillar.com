@@ -1,50 +1,32 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
 
-@layer base {
-  body {
-    @apply font-serif;
-  }
+@theme {
+  --font-serif: "Newsreader", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --color-muted: #5d636e;
 }
 
-@theme {
-  --color-muted: #5d636e;
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-muted: #9aa1ab;
+    }
+  }
+
+  body {
+    @apply bg-white font-serif text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  }
 }
 
 @layer utilities {
   .content {
-    width: calc(100vw - 2rem);
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (min-width: 640px) {
-    .content {
-      width: 28rem; /* sm:w-112 → 112 * 0.25rem = 28rem */
-    }
-  }
-
-  @media (min-width: 768px) {
-    .content {
-      width: 36rem; /* md:w-144 → 144 * 0.25rem = 36rem */
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .content {
-      width: 50rem; /* lg:w-200 → 200 * 0.25rem = 50rem */
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .content {
-      width: 66.666667%;
-    }
-  }
-
-  @media (min-width: 1536px) {
-    .content {
-      width: 50%;
-    }
+    width: 100%;
+    max-width: 50rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
   }
 }

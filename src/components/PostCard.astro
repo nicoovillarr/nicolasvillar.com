@@ -7,40 +7,40 @@ interface Props {
   description: string;
   pubDate: Date;
   category: string;
-  timeToRead: number;
-  filePath: string;
+  minutesToRead: number;
 }
 
-const { id, title, description, pubDate, category, timeToRead, filePath } =
-  Astro.props as Props;
+const { id, title, description, pubDate, category, minutesToRead } =
+  Astro.props;
 
 const url = `/blog/${id}`;
 ---
 
 <article class="flex flex-col space-y-2">
-  <aside class="flex items-center gap-x-2 text-muted font-thin text-sm">
+  <aside class="flex items-center gap-x-2 text-muted text-sm">
     <FormattedDate date={pubDate} />
     •
     <span>{category}</span>
     •
-    <span>{timeToRead} min</span>
+    <span>{minutesToRead} min</span>
   </aside>
 
-  <a
-    href={url}
-    class="relative w-fit text-2xl text-gray-700
-    hover:text-gray-950
-      transition-colors duration-200"
-  >
-    {title}
-  </a>
+  <h2>
+    <a
+      href={url}
+      class="text-2xl text-gray-800 hover:text-gray-950 transition-colors duration-200 dark:text-gray-200 dark:hover:text-white"
+    >
+      {title}
+    </a>
+  </h2>
 
   <p class="text-muted mt-2 line-clamp-2">{description}</p>
 
   <a
     href={url}
-    class="w-fit text-gray-500 hover:text-gray-900 mt-4 transition-colors duration-200"
+    aria-label={`Leer más sobre ${title}`}
+    class="w-fit text-gray-600 hover:text-gray-900 mt-4 transition-colors duration-200 dark:text-gray-400 dark:hover:text-gray-100"
   >
-    <h4>Leer más →</h4>
+    Leer más →
   </a>
 </article>

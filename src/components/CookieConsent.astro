@@ -1,0 +1,134 @@
+---
+import { GA_MEASUREMENT_ID } from "../consts";
+---
+
+<section
+  id="cookie-consent"
+  data-measurement-id={GA_MEASUREMENT_ID}
+  aria-label="Consentimiento de cookies"
+  class="fixed inset-x-4 bottom-4 z-50 mx-auto hidden max-w-xl rounded-lg border border-gray-300 bg-white p-5 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
+>
+  <p class="text-base">
+    Uso Google Analytics para saber cuántas personas visitan el sitio y qué
+    páginas leen. Solo se activa si aceptás.
+    <a
+      href="/privacidad"
+      class="text-blue-700 hover:underline dark:text-blue-400">Más info</a
+    >.
+  </p>
+  <div class="mt-4 flex justify-end gap-3">
+    <button
+      type="button"
+      data-consent="denied"
+      class="cursor-pointer rounded-lg border border-gray-400 px-5 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
+    >
+      Rechazar
+    </button>
+    <button
+      type="button"
+      data-consent="granted"
+      class="cursor-pointer rounded-lg bg-gray-800 px-5 py-2 text-white hover:opacity-90 dark:bg-gray-100 dark:text-gray-900"
+    >
+      Aceptar
+    </button>
+  </div>
+</section>
+
+<script>
+  type Consent = "granted" | "denied";
+  type AnalyticsWindow = Window & {
+    dataLayer?: unknown[];
+    [key: `ga-disable-${string}`]: boolean;
+  };
+
+  const STORAGE_KEY = "analytics-consent";
+
+  const banner = document.getElementById("cookie-consent") as HTMLElement;
+  const measurementId = banner.dataset.measurementId!;
+  const analyticsWindow = window as AnalyticsWindow;
+
+  const readConsent = (): Consent | null => {
+    try {
+      const value = localStorage.getItem(STORAGE_KEY);
+      return value === "granted" || value === "denied" ? value : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const saveConsent = (consent: Consent) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, consent);
+    } catch {
+      return;
+    }
+  };
+
+  const loadAnalytics = () => {
+    analyticsWindow[`ga-disable-${measurementId}`] = false;
+
+    if (analyticsWindow.dataLayer) {
+      return;
+    }
+
+    analyticsWindow.dataLayer = [];
+    function gtag(..._args: unknown[]) {
+      analyticsWindow.dataLayer!.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", measurementId);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.appendChild(script);
+  };
+
+  const removeAnalyticsCookies = () => {
+    analyticsWindow[`ga-disable-${measurementId}`] = true;
+
+    const domains = [location.hostname, `.${location.hostname.replace(/^www\./, "")}`];
+    document.cookie
+      .split(";")
+      .map((cookie) => cookie.split("=")[0].trim())
+      .filter((name) => name.startsWith("_ga"))
+      .forEach((name) => {
+        domains.forEach((domain) => {
+          document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain}`;
+        });
+        document.cookie = `${name}=; Max-Age=0; path=/`;
+      });
+  };
+
+  const applyConsent = (consent: Consent) => {
+    if (consent === "granted") {
+      loadAnalytics();
+    } else {
+      removeAnalyticsCookies();
+    }
+  };
+
+  const showBanner = () => banner.classList.remove("hidden");
+  const hideBanner = () => banner.classList.add("hidden");
+
+  banner.querySelectorAll<HTMLButtonElement>("[data-consent]").forEach((button) =>
+    button.addEventListener("click", () => {
+      const consent = button.dataset.consent as Consent;
+      saveConsent(consent);
+      applyConsent(consent);
+      hideBanner();
+    })
+  );
+
+  document.querySelectorAll("[data-cookie-preferences]").forEach((trigger) =>
+    trigger.addEventListener("click", showBanner)
+  );
+
+  const storedConsent = readConsent();
+
+  if (storedConsent) {
+    applyConsent(storedConsent);
+  } else {
+    showBanner();
+  }
+</script>

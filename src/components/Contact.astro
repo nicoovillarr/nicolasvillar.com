@@ -29,7 +29,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       label="Asunto"
       name="subject"
       options={subjects}
-      placeholder="Selecciona un asunto..."
+      placeholder="Seleccioná un asunto..."
       required
     />
 
@@ -37,7 +37,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       label="Mensaje"
       type="multiline"
       name="message"
-      placeholder="Escribe tu mensaje aquí..."
+      placeholder="Escribí tu mensaje acá..."
       maxLength={500}
       required
     />
@@ -66,7 +66,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     <button
       id="submit-button"
       type="submit"
-      class="mt-4 w-fit ml-auto bg-linear-to-br from-gray-800 to-gray-700 px-8 py-3 rounded-lg text-white cursor-pointer hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+      class="mt-4 w-fit ml-auto bg-linear-to-br from-gray-800 to-gray-700 px-8 py-3 rounded-lg text-white cursor-pointer hover:opacity-90 disabled:cursor-wait disabled:opacity-60 dark:from-gray-100 dark:to-gray-300 dark:text-gray-900"
     >
       Enviar Mensaje
     </button>

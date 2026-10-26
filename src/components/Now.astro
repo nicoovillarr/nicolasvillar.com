@@ -1,5 +1,15 @@
+---
+import { NOW_UPDATED_AT } from "../consts";
+import FormattedDate from "./FormattedDate.astro";
+---
+
 <section class="space-y-4">
-  <h2 class="text-3xl font-semibold mb-6">En qué estoy ahora</h2>
+  <div class="mb-6">
+    <h2 class="text-3xl font-semibold">En qué estoy ahora</h2>
+    <p class="mt-1 text-sm text-muted">
+      Actualizado: <FormattedDate date={NOW_UPDATED_AT} />
+    </p>
+  </div>
 
   <p class="text-lg">
     Actualmente, estoy en el último año de la carrera Ingeniería en Computación

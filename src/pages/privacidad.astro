@@ -1,0 +1,75 @@
+---
+import FormattedDate from "../components/FormattedDate.astro";
+import Layout from "../components/Layout.astro";
+import Prose from "../components/Prose.astro";
+import { CONTACT_EMAIL, SITE_TITLE } from "../consts";
+
+const updatedAt = new Date("2026-10-26");
+---
+
+<Layout
+  title={`Privacidad | ${SITE_TITLE}`}
+  description="Qué datos recolecta este sitio, para qué los uso y cómo podés cambiar tu elección sobre las cookies."
+>
+  <main class="content">
+    <Prose>
+      <h1>Privacidad</h1>
+      <p class="text-muted">
+        Última actualización: <FormattedDate date={updatedAt} />
+      </p>
+
+      <p>
+        Este es un sitio personal. No vendo ni comparto tus datos, y solo
+        recolecto lo mínimo para que el sitio funcione y para saber si a alguien
+        le sirve lo que escribo.
+      </p>
+
+      <h2>Analíticas</h2>
+      <p>
+        Si aceptás las cookies, uso Google Analytics 4 para medir visitas: qué
+        páginas se leen, desde qué tipo de dispositivo y navegador, y desde qué
+        país o ciudad aproximada. Para eso, Google guarda las cookies
+        <code>_ga</code> y <code>_ga_*</code> en tu navegador. Si rechazás, Google
+        Analytics no se carga.
+      </p>
+      <p>
+        Podés cambiar tu elección cuando quieras desde el botón
+        <button
+          type="button"
+          data-cookie-preferences
+          class="cursor-pointer text-blue-700 underline dark:text-blue-400"
+          >Cookies</button
+        >, que también está en el pie de página.
+      </p>
+
+      <h2>Formulario de contacto</h2>
+      <p>
+        Si me escribís, recibo tu nombre, tu email, el asunto y el mensaje. Los
+        uso únicamente para responderte. El envío pasa por
+        <a href="https://resend.com" target="_blank" rel="noopener noreferrer"
+          >Resend</a
+        >, y para frenar el spam el formulario usa
+        <a
+          href="https://www.cloudflare.com/products/turnstile/"
+          target="_blank"
+          rel="noopener noreferrer">Cloudflare Turnstile</a
+        >, que analiza señales técnicas del navegador para verificar que no seas
+        un bot.
+      </p>
+
+      <h2>Hosting</h2>
+      <p>
+        El sitio está alojado en Vercel, que puede registrar datos técnicos de
+        cada visita, como la dirección IP, por motivos de seguridad y
+        funcionamiento.
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        De acuerdo con la Ley N.º 18.331 de Protección de Datos Personales,
+        podés pedirme acceder, corregir o eliminar tus datos escribiéndome a
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    </Prose>
+  </main>
+</Layout>
