@@ -23,7 +23,7 @@ const { title, description, category, timeToRead, pubDate, updatedDate, tags } =
       <p class="description text-gray-600">{description}</p>
 
       {
-        updatedDate && updatedDate !== pubDate ? (
+        updatedDate && updatedDate.getTime() !== pubDate.getTime() ? (
           <p class="text-sm text-gray-500 mt-2">
             Última actualización: <FormattedDate date={updatedDate} />
           </p>
