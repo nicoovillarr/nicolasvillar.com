@@ -1,0 +1,116 @@
+---
+title: "My home server isn't a good idea (and that's why I built it)"
+description: "Building your own server looks unnecessary from the outside, but from the inside it's a constant source of learning and friction. In this post, I walk through my move away from traditional cloud services and the limitations of Windows Server toward my own Debian-based setup. I explain how I handled the hardware, security against attacks and networking with a dynamic IP, not to compete with the industry giants, but to understand—on a small scale—how data centers actually work."
+translationKey: "home-server"
+category: "Technology"
+pubDate: "2025-12-21"
+tags: ["Home Server", "Reflections"]
+enabled: true
+---
+
+For many years I've been trying to get into the cloud. I started by buying yearly plans on Hostinger, back when I was just learning PHP—a language I still have a soft spot for. I also discovered the world of _Cloud Computing_, where I spun up instances on AWS and GCP. More recently, less than a year ago, I discovered Vercel and similar platforms: products-as-a-service that make deploying web applications incredibly easy. But what do they do under the hood?
+
+## Motivation
+
+My main idea was to have a test environment that didn't depend on unnecessary expenses or surprise bills. On AWS, an EC2 instance doesn't cost anything while it's stopped. But did you know that Elastic IPs on AWS carry a silent cost when they're not in use? And there are plenty more examples: there have been cases where Vercel sent users huge bills for network usage after attacks or unexpected traffic spikes (including _DDoS_).
+
+The goal of this project was never to replace any of these solutions. Competing with _hyperscalers_ would never cross my mind. But I did like the idea of having a personal cloud environment where I could run apps for myself (or my family) without worrying about sudden costs beyond a bump in my electricity bill.
+
+### Initial goals
+
+Honestly, at the start I didn't have a clear _roadmap_. I simply had the "whim" of owning my own infrastructure and not depending on anyone. What I wanted most was to host my own _Google Drive_ in the cloud. That's why the first thing I did, as soon as I understood what I was doing, was deploy [NextCloud](https://nextcloud.com/). Funnily enough, along the way I found out it was written in PHP, so I could easily clone the repository and make my own changes.
+
+## Choosing the hardware
+
+At the beginning, the last thing I wanted was to spend tens of thousands of dollars. A real data center server can cost more than ten thousand dollars. My scope was much smaller, not only because I didn't have that money, but because I felt it wasn't worth it for what I wanted to do. So I looked for components that were easy to get, while still being powerful enough that I wouldn't outgrow them right away.
+
+In short, this is what my server started with:
+
+- ASRock B450M PRO 4
+- AMD Ryzen 5 3600 with 6 cores and 12 threads
+- 2x 8GB DDR4 RAM at 3200MHz
+- 2x Crucial MX500, 1TB each
+- 1x Crucial P3 NVMe M.2 SSD, 500GB
+- EVGA 500 GE 80 Plus Gold 500W power supply
+
+In total, it cost me about $506 (not counting import costs). That's roughly equivalent to:
+
+- 2.5 months of a _t3.xlarge_ instance on AWS (4 vCPUs and 16GB of RAM)
+- Almost 3 months of an instance with 6 vCPUs and 16GB of RAM on GCP
+- Less than a month of an _A8 v2_ instance on Azure (8 cores and 16GB of RAM)
+
+_(Estimated on-demand prices in South America, assuming about 730 hours per month, and not counting other things like bandwidth or extra storage)_
+
+**Note**: keep in mind that my goal was never to replace them or deploy production applications on my server; but comparing prices is an interesting way to see how "cheap" a physical server is versus paying for _cloud computing_ services, from a very simplified point of view.
+
+## Windows Server: why I chose it and why I dropped it
+
+My first job was working with _ASP.Net_ and _Blazor_, and I got very comfortable with the Windows Server, Visual Studio and IIS environment.
+
+Shortly after setting up my server, a friend asked me to build an e-commerce site for his business; and I had the brilliant idea of writing the _backend_ in _ASP.Net_. Some time later, I ran into a huge wall: **licensing**.
+
+While Microsoft offered an excellent graphical interface for maintaining a server with web applications, it not only required that Windows Server to be licensed, but its whole licensing ecosystem became a real problem. My first thought was: "I use _ASP.Net_", and at the time my perception (and my experience) was that _ASP.Net_ didn't play well with Linux, so I committed to Windows Server.
+
+### Problems I ran into
+
+#### Resources
+
+It turns out that—to nobody's surprise—Windows burns through a lot of resources unnecessarily. There are plenty of services running in the background, a graphical interface, telemetry, and so on.
+
+I wanted to install [Metricbeat](https://www.elastic.co/beats/metricbeat) from the Elastic Stack. The bad news? Windows Server on its own already used a ton of RAM—add Metricbeat on top of that... There wasn't much headroom left for virtual machines or applications to host.
+
+#### Server license vs. remote access licenses
+
+Microsoft separates the right to have a server from the right to use it. They charge you per core, the server boots, but you still aren't allowed to log in.
+
+That's where _CALs_ come in (or the permission to breathe). They license people: every time a user or device accesses files or services on the system, it needs a CAL—regardless of whether it was only for 5 minutes, or whether it was an API or a script. And the worst part? Windows doesn't technically stop you; the problem shows up when there's an audit.
+
+And let's not even talk about RDS, that's outright abuse: a double toll.
+
+#### Main reason for leaving Windows Server
+
+My goal was to have a cloud where I wouldn't get unexpected bills and where I could log in and run whatever I wanted without anyone telling me what I could or couldn't do.
+
+That's why I decided Windows didn't offer the freedom I'd been looking for from the start.
+
+### Migrating to Debian
+
+My next option was Linux. On my personal PC I dual-boot Windows and Ubuntu (partly because I like feeling like a hacker doing everything from the terminal), so the Unix environment wasn't new to me. There's no great reason I went with Debian; I just saw that it has a big community and a good reputation for server use.
+
+Luckily—for both me and my friend—the web app I built for him started to grow, so I decided to migrate everything to NextJS and we deployed it on Vercel. That meant my server was free of any real responsibilities or production applications, so I could take the time to remove Windows Server, install Debian, and get familiar with this new environment.
+
+## Security (the bare minimum)
+
+What scared me most were _DDoS_ attacks, because an attack like that would not only take down my network, it would wreck the bandwidth at home, slowing my internet for the rest of the month. So from day one I put Cloudflare in front as a barrier. That already gives me basic protection against traffic spikes, and I can turn on modes like "under attack" to block bots. The only catch is that Cloudflare only blocks _DDoS_ attacks on traffic that goes through its network (in my case, just _HTTP_ and _HTTPS_). If someone sends thousands of requests to some other port I left open, mitigating it is up to me and my configuration.
+
+On the other hand, real _DDoS_ mitigation requires support from the ISP, something a mere mortal like me couldn't get, let alone for a home server.
+
+Every app I run on my server runs under a user with the minimum permissions needed. Also, the only port open on the WAN side is for _HTTP_. I made peace with the _firewall_ and tried to understand how to configure it properly without leaving a door open—it's not an enterprise setup, but I didn't want my server to be trivial to hack either.
+
+On top of that, _SSH_ access is only possible from my local network, so if I want to log in I need to be at home or use a VPN (I installed WireGuard for this).
+
+Finally, each site lives in virtual machines on separate subnets, using virt-install, nftables and DHCP, among other tools. With nftables I configured these subnets so they can't open direct connections to machines outside their subnet, using _connection tracking_. This always allows _ESTABLISHED_ and _RELATED_ traffic and only blocks _NEW_ connections started from the restricted subnet toward other zones. That way the subnet can't open connections, but it can respond to the ones started from outside.
+
+## Dynamic IP
+
+To reach the applications hosted on my server, one challenge was my internet plan with ANTEL. Every 12 hours (roughly) my public IP changes, so pointing my hostnames to my IP only worked for a short while. While talking about this project with an acquaintance, he told me about DDNS services, a whole new world for me at the time. That's how I found [Dynu](https://www.dynu.com/), a free dynamic DNS service that also offers hostnames at no extra cost; great for testing.
+
+After a few months of using it, I started looking into how Dynu worked, and it was dead simple. It periodically checked my public IP, and if it was different from the last one, it updated the DNS records. That's when I wanted to consolidate everything in Cloudflare, so I looked into how its API works. In the end, I wrote a simple script that does exactly the same thing but updates Cloudflare's DNS, and left Dynu behind.
+
+## What I'm running on the server today
+
+Right now, my server isn't running anything productive or serious. I mostly use it to host other apps I'm building and want to show to people (usually friends and family) without paying for AWS instances or eating into free tiers like Vercel's.
+
+I also have a PostgreSQL database where I can store development or test data shared across devices: if I'm building something on my personal PC, I can access the same data if one day I have to work from a laptop.
+
+It's a pretty amateur cloud, for personal stuff that doesn't need rock-solid stability, SLAs, or lots of people accessing it.
+
+## Future plans
+
+Going forward, I'd like to start hosting apps I can get more out of, like going back to a personal _Drive_ (I didn't like NextCloud). I'm also working on a sort of personal control panel. My goal is to automate everything I learned to do by hand: from launching virtual machines with virt-install to setting up nftables rules and DHCP without touching the terminal every time.
+
+## Conclusion
+
+This project made me think about a lot of things many developers take for granted. From analyzing hardware prices to evaluating products and services that help me deploy applications on my own infrastructure. I had to think about WAN access, ports, dynamic IPs, resource management, virtualization, security, and many other details that usually stay hidden when you create an instance on AWS or GCP.
+
+It taught me a lot and forced me to face problems that are normally abstracted away, which let me understand—on a very small scale—how real data centers work. That understanding is what now drives me to build my own automation tools. Not just to avoid the friction, but to master it and make it work for me. In the end, my home server **wasn't just a good idea**, it was the gateway to a level of control the cloud would never have demanded of me.

@@ -1,41 +1,73 @@
 ---
 import { NOW_UPDATED_AT } from "../consts";
+import { getLang, useTranslations, type Localized } from "../i18n/ui";
 import FormattedDate from "./FormattedDate.astro";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+
+const sections: Localized<{ title?: string; paragraphs: string[] }[]> = {
+  en: [
+    {
+      paragraphs: [
+        "I'm currently in the final year of my Computer Engineering degree at Universidad de la Empresa.",
+      ],
+    },
+    {
+      title: "Learning",
+      paragraphs: [
+        "I'm learning NestJS because I want to sharpen my backend skills and build robust, scalable APIs. I'm also deepening my TypeScript and software architecture knowledge, using DDD as an excuse to think harder about domain boundaries and avoid backends that become impossible to maintain six months in.",
+        "I also keep up with content on new technologies and software development best practices to stay current.",
+      ],
+    },
+    {
+      title: "Playing",
+      paragraphs: [
+        "I'm replaying Red Dead Redemption 2. I love the game's atmosphere and exploring the open world on horseback. It's one of those games I enjoy at my own pace (I've already finished the story twice).",
+      ],
+    },
+  ],
+  es: [
+    {
+      paragraphs: [
+        "Actualmente, estoy en el último año de la carrera Ingeniería en Computación en la Universidad de la Empresa.",
+      ],
+    },
+    {
+      title: "Aprendiendo",
+      paragraphs: [
+        "Estoy aprendiendo NestJS, ya que quiero mejorar mis habilidades en el desarrollo de aplicaciones backend y construir APIs robustas y escalables. Intento afianzar mis conocimientos en TypeScript y arquitectura de software, usando DDD como excusa para pensar mejor los límites del dominio y evitar backends que se vuelven imposibles de mantener a los seis meses.",
+        "También, constantemente estoy mirando contenido sobre nuevas tecnologías y mejores prácticas en desarrollo de software para mantenerme actualizado.",
+      ],
+    },
+    {
+      title: "Jugando",
+      paragraphs: [
+        "Estoy volviendo a jugar Red Dead Redemption 2. Me gusta mucho el ambiente del juego y explorar el mundo abierto en caballo. Es de esos juegos que disfruto sin apuro (ya terminé la historia dos veces).",
+      ],
+    },
+  ],
+};
 ---
 
 <section class="space-y-4">
   <div class="mb-6">
-    <h2 class="text-3xl font-semibold">En qué estoy ahora</h2>
+    <h2 class="text-3xl font-semibold">{t("now.title")}</h2>
     <p class="mt-1 text-sm text-muted">
-      Actualizado: <FormattedDate date={NOW_UPDATED_AT} />
+      {t("now.updated")} <FormattedDate date={NOW_UPDATED_AT} />
     </p>
   </div>
 
-  <p class="text-lg">
-    Actualmente, estoy en el último año de la carrera Ingeniería en Computación
-    en la Universidad de la Empresa.
-  </p>
-
-  <h3 class="text-xl font-semibold mt-8">Aprendiendo</h3>
-
-  <p class="text-lg">
-    Estoy aprendiendo NestJS, ya que quiero mejorar mis habilidades en el
-    desarrollo de aplicaciones backend y construir APIs robustas y escalables.
-    Intento afianzar mis conocimientos en TypeScript y arquitectura de software,
-    usando DDD como excusa para pensar mejor los límites del dominio y evitar
-    backends que se vuelven imposibles de mantener a los seis meses.
-  </p>
-
-  <p class="text-lg">
-    También, constantemente estoy mirando contenido sobre nuevas tecnologías y
-    mejores prácticas en desarrollo de software para mantenerme actualizado.
-  </p>
-
-  <h3 class="text-xl font-semibold mt-8">Jugando</h3>
-
-  <p class="text-lg">
-    Estoy volviendo a jugar Red Dead Redemption 2. Me gusta mucho el ambiente
-    del juego y explorar el mundo abierto en caballo. Es de esos juegos que
-    disfruto sin apuro (ya terminé la historia dos veces).
-  </p>
+  {
+    sections[lang].map((section) => (
+      <>
+        {section.title && (
+          <h3 class="text-xl font-semibold mt-8">{section.title}</h3>
+        )}
+        {section.paragraphs.map((paragraph) => (
+          <p class="text-lg">{paragraph}</p>
+        ))}
+      </>
+    ))
+  }
 </section>

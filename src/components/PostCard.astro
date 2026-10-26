@@ -1,8 +1,9 @@
 ---
 import FormattedDate from "./FormattedDate.astro";
+import { getLang, localizePath, useTranslations } from "../i18n/ui";
 
 interface Props {
-  id: string;
+  slug: string;
   title: string;
   description: string;
   pubDate: Date;
@@ -10,10 +11,12 @@ interface Props {
   minutesToRead: number;
 }
 
-const { id, title, description, pubDate, category, minutesToRead } =
+const { slug, title, description, pubDate, category, minutesToRead } =
   Astro.props;
 
-const url = `/blog/${id}`;
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const url = localizePath(lang, `/blog/${slug}`);
 ---
 
 <article class="flex flex-col space-y-2">
@@ -38,9 +41,9 @@ const url = `/blog/${id}`;
 
   <a
     href={url}
-    aria-label={`Leer más sobre ${title}`}
+    aria-label={`${t("blog.readMoreAbout")} ${title}`}
     class="w-fit text-gray-600 hover:text-gray-900 mt-4 transition-colors duration-200 dark:text-gray-400 dark:hover:text-gray-100"
   >
-    Leer más →
+    {t("blog.readMore")} →
   </a>
 </article>

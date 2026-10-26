@@ -1,0 +1,34 @@
+---
+import CareerExperience from "../CareerExperience.astro";
+import Contact from "../Contact.astro";
+import Hero from "../Hero.astro";
+import Layout from "../Layout.astro";
+import Now from "../Now.astro";
+import PortfolioList from "../PortfolioList.astro";
+import { SITE_TITLE } from "../../consts";
+import { getLang, useTranslations } from "../../i18n/ui";
+
+const t = useTranslations(getLang(Astro.currentLocale));
+---
+
+<Layout title={`${SITE_TITLE} | ${t("site.role")}`}>
+  <main class="content">
+    <Hero />
+
+    <div class="my-14"></div>
+
+    <PortfolioList />
+
+    <div class="w-12 h-px bg-muted my-10"></div>
+
+    <Now />
+
+    <div class="w-12 h-px bg-muted my-10"></div>
+
+    <CareerExperience />
+
+    <div class="w-12 h-px bg-muted my-10"></div>
+
+    <Contact />
+  </main>
+</Layout>

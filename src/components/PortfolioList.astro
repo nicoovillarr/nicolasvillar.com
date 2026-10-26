@@ -5,62 +5,94 @@ import EnLaGondola from "../assets/enlagondola.svg";
 import Fendis from "../assets/fendis.webp";
 import Marppa from "../assets/marppa.svg";
 import Trgtz from "../assets/trgtz.png";
+import {
+  getLang,
+  useTranslations,
+  type Localized,
+} from "../i18n/ui";
+import { getTranslationPaths } from "../utils/posts";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+
+const linkLabels: Localized<Record<"site" | "code" | "post", string>> = {
+  en: { site: "Website", code: "Code", post: "Post" },
+  es: { site: "Sitio", code: "Código", post: "Post" },
+};
+const labels = linkLabels[lang];
+const homeServerPost = (await getTranslationPaths("home-server"))[lang];
 
 const projects: {
   title: string;
-  description: string;
+  description: Localized<string>;
   image: ImageMetadata;
-  status?: string;
+  status?: Localized<string>;
   stack: string[];
   links: { text: string; href: string }[];
 }[] = [
   {
     title: "EnLaGóndola",
-    description:
-      "El SaaS que estoy construyendo ahora: una app que te dice exactamente en qué góndola del súper está lo que buscás, con un mapa virtual de la tienda y búsqueda en tiempo real. Del otro lado, cada supermercado tiene un panel web multi-tenant para cargar productos, precios, promociones y el mapa de sus sucursales, y analytics de qué buscan sus clientes y qué no encuentran.",
+    description: {
+      en: "The SaaS I'm building right now: an app that tells you exactly which supermarket aisle has what you're looking for, with a virtual store map and real-time search. On the other side, each supermarket gets a multi-tenant web dashboard to manage products, prices, promotions and the map of its stores, plus analytics on what customers search for and can't find.",
+      es: "El SaaS que estoy construyendo ahora: una app que te dice exactamente en qué góndola del súper está lo que buscás, con un mapa virtual de la tienda y búsqueda en tiempo real. Del otro lado, cada supermercado tiene un panel web multi-tenant para cargar productos, precios, promociones y el mapa de sus sucursales, y analytics de qué buscan sus clientes y qué no encuentran.",
+    },
     image: EnLaGondola,
-    status: "Próximamente",
+    status: { en: "Coming soon", es: "Próximamente" },
     stack: ["Flutter", "NestJS", "Next.js", "PostgreSQL", "Prisma", "Redis"],
-    links: [{ text: "Sitio", href: "https://enlagondola.com" }],
+    links: [{ text: labels.site, href: "https://enlagondola.com" }],
   },
   {
     title: "Marppa Cloud",
-    description:
-      "Mi propia plataforma cloud: el panel de control del que hablo en el post de mi servidor. Automatiza lo que antes hacía a mano por terminal: levanta máquinas virtuales con libvirt, arma las redes y reglas de nftables y gestiona todo desde un panel web, con tareas en cola y actualizaciones en tiempo real por WebSocket.",
+    description: {
+      en: "My own cloud platform: the control panel I mention in my home server post. It automates what I used to do by hand in the terminal: it spins up virtual machines with libvirt, sets up networks and nftables rules, and manages everything from a web dashboard, with queued jobs and real-time updates over WebSocket.",
+      es: "Mi propia plataforma cloud: el panel de control del que hablo en el post de mi servidor. Automatiza lo que antes hacía a mano por terminal: levanta máquinas virtuales con libvirt, arma las redes y reglas de nftables y gestiona todo desde un panel web, con tareas en cola y actualizaciones en tiempo real por WebSocket.",
+    },
     image: Marppa,
     stack: ["NestJS", "Next.js", "PostgreSQL", "Redis", "libvirt"],
     links: [
-      { text: "Sitio", href: "https://cloud.marppa.com" },
-      { text: "Código", href: "https://github.com/nicoovillarr/marppa-cloud" },
-      { text: "Post", href: "/blog/mi-propio-servidor" },
+      { text: labels.site, href: "https://cloud.marppa.com" },
+      { text: labels.code, href: "https://github.com/nicoovillarr/marppa-cloud" },
+      { text: labels.post, href: homeServerPost },
     ],
   },
   {
     title: "Trgtz",
-    description:
-      "App móvil para definir tus metas del año, compartirlas con amigos y celebrar cada logro juntos. La hice de punta a punta, desde la idea hasta producción: el esquema de la base de datos, la API REST, la app multiplataforma, CI/CD y tests unitarios.",
+    description: {
+      en: "A mobile app to set your goals for the year, share them with friends and celebrate every win together. I built it end to end, from idea to production: the database schema, the REST API, the cross-platform app, CI/CD and unit tests.",
+      es: "App móvil para definir tus metas del año, compartirlas con amigos y celebrar cada logro juntos. La hice de punta a punta, desde la idea hasta producción: el esquema de la base de datos, la API REST, la app multiplataforma, CI/CD y tests unitarios.",
+    },
     image: Trgtz,
     stack: ["Flutter", "NestJS", "PostgreSQL", "AWS"],
     links: [
-      { text: "Sitio", href: "https://www.trgtz.com" },
-      { text: "Código", href: "https://github.com/nicoovillarr/trgtz" },
+      { text: labels.site, href: "https://www.trgtz.com" },
+      { text: labels.code, href: "https://github.com/nicoovillarr/trgtz" },
     ],
   },
   {
     title: "Fendis",
-    description:
-      "Le armé a un amigo una plataforma de e-commerce y gestión para digitalizar su negocio. Me encargué de todo: el diseño de la interfaz, la base de datos, el backend y la infraestructura. El checkout manda el pedido directo por WhatsApp, y en el primer mes después del lanzamiento las ventas subieron un 20%. Fue genial ver cómo una idea se transformaba en una herramienta real que ayudó a su negocio a crecer.",
+    description: {
+      en: "I built an e-commerce and management platform for a friend to take his business online. I handled everything: the interface design, the database, the backend and the infrastructure. The checkout sends orders straight to WhatsApp, and in the first month after launch sales grew 20%. It was great to see an idea turn into a real tool that helped his business grow.",
+      es: "Le armé a un amigo una plataforma de e-commerce y gestión para digitalizar su negocio. Me encargué de todo: el diseño de la interfaz, la base de datos, el backend y la infraestructura. El checkout manda el pedido directo por WhatsApp, y en el primer mes después del lanzamiento las ventas subieron un 20%. Fue genial ver cómo una idea se transformaba en una herramienta real que ayudó a su negocio a crecer.",
+    },
     image: Fendis,
     stack: ["Next.js", "Prisma", "PostgreSQL", "AWS S3"],
-    links: [{ text: "Sitio", href: "https://www.fendis.uy/" }],
+    links: [{ text: labels.site, href: "https://www.fendis.uy/" }],
   },
 ];
 ---
 
 <section>
-  <h2 class="text-3xl font-semibold mb-8">Lo que he construido</h2>
+  <h2 class="text-3xl font-semibold mb-8">{t("portfolio.title")}</h2>
 
   <div class="space-y-10">
-    {projects.map((project) => <PortfolioItem {...project} />)}
+    {
+      projects.map((project) => (
+        <PortfolioItem
+          {...project}
+          description={project.description[lang]}
+          status={project.status?.[lang]}
+        />
+      ))
+    }
   </div>
 </section>

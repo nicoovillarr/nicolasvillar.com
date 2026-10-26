@@ -3,10 +3,12 @@ import type { CollectionEntry } from "astro:content";
 import FormattedDate from "./FormattedDate.astro";
 import TagBox from "./TagBox.astro";
 import Prose from "./Prose.astro";
+import { getLang, useTranslations } from "../i18n/ui";
 
 type Props = CollectionEntry<"blog">["data"] & { minutesToRead: number };
 const { title, description, category, minutesToRead, pubDate, updatedDate, tags } =
   Astro.props;
+const t = useTranslations(getLang(Astro.currentLocale));
 ---
 
 <article class="content">
@@ -14,7 +16,7 @@ const { title, description, category, minutesToRead, pubDate, updatedDate, tags 
     <aside class="flex text-muted mb-2">
       <FormattedDate date={pubDate} />
       <span class="mx-2">•</span>
-      <span>{minutesToRead} min de lectura</span>
+      <span>{minutesToRead} {t("blog.minutesToRead")}</span>
     </aside>
 
     <Prose>
@@ -25,7 +27,7 @@ const { title, description, category, minutesToRead, pubDate, updatedDate, tags 
       {
         updatedDate && updatedDate.getTime() !== pubDate.getTime() ? (
           <p class="text-sm text-muted mt-2">
-            Última actualización: <FormattedDate date={updatedDate} />
+            {t("blog.lastUpdated")} <FormattedDate date={updatedDate} />
           </p>
         ) : null
       }

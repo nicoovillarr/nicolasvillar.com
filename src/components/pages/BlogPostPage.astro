@@ -1,0 +1,34 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import BlogPost from "../BlogPost.astro";
+import Layout from "../Layout.astro";
+import { SITE_TITLE } from "../../consts";
+import { getTranslationPaths } from "../../utils/posts";
+import { readingTime } from "../../utils/readingTime";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const alternatePaths = await getTranslationPaths(post.data.translationKey);
+---
+
+<Layout
+  title={`${post.data.title} | ${SITE_TITLE}`}
+  description={post.data.description}
+  image={`/og/${post.id}.png`}
+  alternatePaths={alternatePaths}
+  article={{
+    headline: post.data.title,
+    publishedTime: post.data.pubDate,
+    modifiedTime: post.data.updatedDate,
+    section: post.data.category,
+    tags: post.data.tags,
+  }}
+>
+  <BlogPost {...post.data} minutesToRead={readingTime(post.body)}>
+    <Content />
+  </BlogPost>
+</Layout>

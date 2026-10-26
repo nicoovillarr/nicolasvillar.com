@@ -1,0 +1,89 @@
+---
+import FormattedDate from "../../components/FormattedDate.astro";
+import Layout from "../../components/Layout.astro";
+import Prose from "../../components/Prose.astro";
+import { CONTACT_EMAIL, SITE_TITLE } from "../../consts";
+
+const updatedAt = new Date("2026-10-26");
+---
+
+<Layout
+  title={`Privacy | ${SITE_TITLE}`}
+  description="What data this site collects, what I use it for and how you can change your cookie choice."
+>
+  <main class="content">
+    <Prose>
+      <h1>Privacy</h1>
+      <p class="text-muted">
+        Last updated: <FormattedDate date={updatedAt} />
+      </p>
+
+      <p>
+        This is a personal website. I don't sell or share your data, and I only
+        collect the minimum needed to keep the site running and to know whether
+        what I write is useful to anyone.
+      </p>
+
+      <h2>Analytics</h2>
+      <p>
+        If you accept cookies, I use Google Analytics 4 to measure visits: which
+        pages are read, what kind of device and browser are used, and the
+        approximate country or city. To do this, Google stores the
+        <code>_ga</code> and <code>_ga_*</code> cookies in your browser. If you
+        reject them, Google Analytics is not loaded.
+      </p>
+
+      <h2 id="cookies" class="scroll-mt-8">Your cookie preferences</h2>
+      <p>
+        Current status: <strong data-consent-status>not chosen yet</strong>. You
+        can change it at any time:
+      </p>
+      <div data-consent-controls class="not-prose flex flex-wrap gap-3">
+        <button
+          type="button"
+          data-consent="granted"
+          aria-pressed="false"
+          class="cursor-pointer rounded-lg border border-gray-400 px-5 py-2 hover:bg-gray-100 aria-pressed:border-gray-800 aria-pressed:bg-gray-800 aria-pressed:text-white dark:border-gray-600 dark:hover:bg-gray-800 dark:aria-pressed:border-gray-100 dark:aria-pressed:bg-gray-100 dark:aria-pressed:text-gray-900"
+        >
+          Accept cookies
+        </button>
+        <button
+          type="button"
+          data-consent="denied"
+          aria-pressed="false"
+          class="cursor-pointer rounded-lg border border-gray-400 px-5 py-2 hover:bg-gray-100 aria-pressed:border-gray-800 aria-pressed:bg-gray-800 aria-pressed:text-white dark:border-gray-600 dark:hover:bg-gray-800 dark:aria-pressed:border-gray-100 dark:aria-pressed:bg-gray-100 dark:aria-pressed:text-gray-900"
+        >
+          Reject cookies
+        </button>
+      </div>
+
+      <h2>Contact form</h2>
+      <p>
+        If you write to me, I receive your name, email, subject and message. I
+        use them only to reply to you. Messages are sent through
+        <a href="https://resend.com" target="_blank" rel="noopener noreferrer"
+          >Resend</a
+        >, and to stop spam the form uses
+        <a
+          href="https://www.cloudflare.com/products/turnstile/"
+          target="_blank"
+          rel="noopener noreferrer">Cloudflare Turnstile</a
+        >, which analyzes technical browser signals to verify that you're not a
+        bot.
+      </p>
+
+      <h2>Hosting</h2>
+      <p>
+        The site is hosted on Vercel, which may log technical data from each
+        visit, such as your IP address, for security and operational purposes.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Under Uruguay's Personal Data Protection Law No. 18.331, you can ask me
+        to access, correct or delete your data by emailing
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    </Prose>
+  </main>
+</Layout>
