@@ -1,13 +1,15 @@
 ---
-import Layout from "../../components/Layout.astro";
-import PostCard from "../../components/PostCard.astro";
+import Layout from "../Layout.astro";
+import PostCard from "../PostCard.astro";
 import { SITE_TITLE } from "../../consts";
-import { getVisiblePosts } from "../../utils/posts";
+import { getLang, useTranslations } from "../../i18n/ui";
+import { getVisiblePosts, postSlug } from "../../utils/posts";
 import { readingTime } from "../../utils/readingTime";
 
-const posts = await getVisiblePosts();
-const description =
-  "Reflexiones y proyectos personales sobre desarrollo web, infraestructura y programación en general.";
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const posts = await getVisiblePosts(lang);
+const description = t("blog.description");
 ---
 
 <Layout title={`Blog | ${SITE_TITLE}`} description={description}>
@@ -21,7 +23,7 @@ const description =
       {
         posts.map((post) => (
           <PostCard
-            id={post.id}
+            slug={postSlug(post)}
             title={post.data.title}
             description={post.data.description}
             pubDate={post.data.pubDate}

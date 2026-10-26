@@ -8,28 +8,32 @@ import Appbar from "./Appbar.astro";
 import Footer from "./Footer.astro";
 import BaseHead, { type Article } from "./BaseHead.astro";
 import CookieConsent from "./CookieConsent.astro";
+import { getLang, htmlLang, type Localized } from "../i18n/ui";
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
   article?: Article;
+  alternatePaths?: Localized<string>;
 }
 
-const { title, description, image, article } = Astro.props;
+const { title, description, image, article, alternatePaths } = Astro.props;
+const lang = getLang(Astro.currentLocale);
 ---
 
-<html lang="es-UY">
+<html lang={htmlLang[lang]}>
   <head>
     <BaseHead
       title={title}
       description={description}
       image={image}
       article={article}
+      alternatePaths={alternatePaths}
     />
   </head>
   <body class="min-h-screen grid grid-rows-[auto_1fr_auto] gap-8">
-    <Appbar />
+    <Appbar alternatePaths={alternatePaths} />
     <slot />
     <Footer />
     <CookieConsent />

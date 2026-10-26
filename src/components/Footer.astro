@@ -1,39 +1,43 @@
 ---
 import { CONTACT_EMAIL } from "../consts";
 import FooterLinks from "./FooterLinks.astro";
+import { getLang, localizePath, useTranslations } from "../i18n/ui";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
 <footer class="border-t border-gray-300 py-8 dark:border-gray-700">
   <div class="content h-full flex flex-wrap justify-between gap-x-4 gap-y-6">
     <div>
       <p class="text-sm text-muted">
-        © {new Date().getFullYear()} Nicolás Villar. Todos los derechos reservados.
+        © {new Date().getFullYear()} Nicolás Villar. {t("footer.rights")}
       </p>
       <p class="mt-2 flex gap-x-4 text-sm">
         <a
-          href="/privacidad"
+          href={localizePath(lang, "/privacy")}
           class="text-gray-600 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-gray-100"
-          >Privacidad</a
+          >{t("footer.privacy")}</a
         >
         <a
-          href="/privacidad#cookies"
+          href={localizePath(lang, "/privacy#cookies")}
           class="text-gray-600 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-gray-100"
-          >Cookies</a
+          >{t("footer.cookies")}</a
         >
       </p>
     </div>
 
     <FooterLinks
-      title="Links"
+      title={t("footer.links")}
       links={[
-        { text: "Inicio", href: "/" },
-        { text: "Blog", href: "/blog" },
-        { text: "Contacto", href: "/#contact" },
+        { text: t("nav.home"), href: localizePath(lang) },
+        { text: t("nav.blog"), href: localizePath(lang, "/blog") },
+        { text: t("nav.contact"), href: localizePath(lang, "/#contact") },
       ]}
     />
 
     <FooterLinks
-      title="Contactame"
+      title={t("footer.contact")}
       links={[
         { text: "GitHub", href: "https://github.com/nicoovillarr" },
         {

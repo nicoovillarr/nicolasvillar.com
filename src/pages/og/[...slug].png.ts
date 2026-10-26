@@ -3,12 +3,8 @@ import { join } from "node:path";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute, GetStaticPaths } from "astro";
 import satori from "satori";
-import {
-  HOME_OG_SLUG,
-  SITE_DESCRIPTION,
-  SITE_ROLE,
-  SITE_TITLE,
-} from "../../consts";
+import { HOME_OG_SLUG, SITE_TITLE } from "../../consts";
+import { languages, useTranslations, type Lang } from "../../i18n/ui";
 import { getVisiblePosts } from "../../utils/posts";
 
 const FONTS_DIR = join(
@@ -20,22 +16,33 @@ const loadFont = (weight: 400 | 600) =>
   readFile(join(FONTS_DIR, `newsreader-latin-${weight}-normal.woff`));
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getVisiblePosts();
+  const paths = await Promise.all(
+    (Object.keys(languages) as Lang[]).map(async (lang) => {
+      const t = useTranslations(lang);
+      const posts = await getVisiblePosts(lang);
 
-  return [
-    {
-      params: { slug: HOME_OG_SLUG },
-      props: { eyebrow: SITE_ROLE, title: SITE_TITLE, subtitle: SITE_DESCRIPTION },
-    },
-    ...posts.map((post) => ({
-      params: { slug: post.id },
-      props: {
-        eyebrow: post.data.category,
-        title: post.data.title,
-        subtitle: "",
-      },
-    })),
-  ];
+      return [
+        {
+          params: { slug: `${lang}/${HOME_OG_SLUG}` },
+          props: {
+            eyebrow: t("site.role"),
+            title: SITE_TITLE,
+            subtitle: t("site.description"),
+          },
+        },
+        ...posts.map((post) => ({
+          params: { slug: post.id },
+          props: {
+            eyebrow: post.data.category,
+            title: post.data.title,
+            subtitle: "",
+          },
+        })),
+      ];
+    })
+  );
+
+  return paths.flat();
 };
 
 const text = (value: string, style: Record<string, unknown>) => ({

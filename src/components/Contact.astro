@@ -2,48 +2,66 @@
 import { subjects } from "../consts";
 import Input from "./Input.astro";
 import Select from "./Select.astro";
+import { getLang, useTranslations } from "../i18n/ui";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const subjectOptions = Object.entries(subjects).map(([value, label]) => ({
+  value,
+  displayText: label[lang],
+}));
 
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <section id="contact">
-  <h2 class="text-3xl font-semibold mb-6">Contactame</h2>
+  <h2 class="text-3xl font-semibold mb-6">{t("contact.title")}</h2>
 
-  <form id="contact-form" class="flex flex-col gap-y-2">
+  <form
+    id="contact-form"
+    class="flex flex-col gap-y-2"
+    data-sending={t("contact.sending")}
+    data-success={t("contact.success")}
+    data-try-again={t("contact.tryAgain")}
+    data-error={t("contact.error")}
+    data-offline={t("contact.offline")}
+  >
+    <input type="hidden" name="lang" value={lang} />
+
     <Input
-      label="Nombre"
+      label={t("contact.name")}
       name="name"
-      placeholder="Tu nombre completo"
+      placeholder={t("contact.namePlaceholder")}
       required
     />
 
     <Input
-      label="Correo Electrónico"
+      label={t("contact.email")}
       type="email"
       name="email"
-      placeholder="Tu correo electrónico"
+      placeholder={t("contact.emailPlaceholder")}
       required
     />
 
     <Select
-      label="Asunto"
+      label={t("contact.subject")}
       name="subject"
-      options={subjects}
-      placeholder="Seleccioná un asunto..."
+      options={subjectOptions}
+      placeholder={t("contact.subjectPlaceholder")}
       required
     />
 
     <Input
-      label="Mensaje"
+      label={t("contact.message")}
       type="multiline"
       name="message"
-      placeholder="Escribí tu mensaje acá..."
+      placeholder={t("contact.messagePlaceholder")}
       maxLength={500}
       required
     />
 
     <div class="absolute -left-[9999px]" aria-hidden="true">
-      <label for="website">Sitio web</label>
+      <label for="website">Website</label>
       <input
         type="text"
         id="website"
@@ -58,7 +76,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         <div
           class="cf-turnstile mt-2 ml-auto"
           data-sitekey={turnstileSiteKey}
-          data-language="es"
+          data-language={lang}
         />
       )
     }
@@ -68,7 +86,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       type="submit"
       class="mt-4 w-fit ml-auto bg-linear-to-br from-gray-800 to-gray-700 px-8 py-3 rounded-lg text-white cursor-pointer hover:opacity-90 disabled:cursor-wait disabled:opacity-60 dark:from-gray-100 dark:to-gray-300 dark:text-gray-900"
     >
-      Enviar Mensaje
+      {t("contact.submit")}
     </button>
 
     <p id="status-msg" class="text-sm ml-auto hidden"></p>
@@ -117,9 +135,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     }
 
     const data = Object.fromEntries(new FormData(form));
+    const messages = form.dataset;
 
     submitButton.disabled = true;
-    showStatus("Enviando...");
+    showStatus(messages.sending!);
 
     try {
       const response = await fetch("/api/send-email", {
@@ -131,7 +150,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       });
 
       if (response.ok) {
-        showStatus("¡Gracias! Te responderé pronto.");
+        showStatus(messages.success!);
         form.reset();
         form
           .querySelectorAll("input, textarea")
@@ -140,12 +159,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         const errorMessage = await readErrorMessage(response);
         showStatus(
           errorMessage
-            ? `${errorMessage}. Intentá de nuevo.`
-            : "Hubo un error, intentá de nuevo."
+            ? `${errorMessage}. ${messages.tryAgain}`
+            : messages.error!
         );
       }
     } catch {
-      showStatus("No hay conexión, intentá de nuevo en unos minutos.");
+      showStatus(messages.offline!);
     } finally {
       submitButton.disabled = false;
       (window as TurnstileWindow).turnstile?.reset();

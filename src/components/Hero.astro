@@ -1,12 +1,27 @@
 ---
 import { Image } from "astro:assets";
 import Me from "../assets/yo2.webp";
+import { getLang, useTranslations, type Localized } from "../i18n/ui";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+
+const paragraphs: Localized<string[]> = {
+  en: [
+    "Senior full stack developer with 6 years of experience and a soft spot for clean design and solid architecture. I currently build systems for US clients at Kaizen Softworks, and on my own time I experiment with new technologies.",
+    "When I'm not coding, I like playing the piano and watching shows on Netflix.",
+  ],
+  es: [
+    "Desarrollador full stack senior con 6 años de experiencia y debilidad por el diseño limpio y la arquitectura robusta. Actualmente construyo sistemas para clientes de Estados Unidos en Kaizen Softworks, y por mi cuenta experimento con nuevas tecnologías.",
+    "Cuando no estoy programando, me gusta tocar el piano y mirar series en Netflix.",
+  ],
+};
 ---
 
 <section class="flex flex-col items-start gap-8 md:flex-row">
   <Image
     src={Me}
-    alt="Foto de Nicolás Villar"
+    alt={t("hero.photoAlt")}
     widths={[320, 480, 640]}
     sizes="(min-width: 768px) 256px, calc(100vw - 2rem)"
     loading="eager"
@@ -16,16 +31,7 @@ import Me from "../assets/yo2.webp";
 
   <div class="flex flex-col justify-center gap-y-4">
     <h1 class="text-4xl font-bold">Nicolás Villar</h1>
-    <p class="text-lg">
-      Desarrollador full stack senior con 6 años de experiencia y debilidad por
-      el diseño limpio y la arquitectura robusta. Actualmente construyo sistemas
-      para clientes de Estados Unidos en Kaizen Softworks, y por mi cuenta
-      experimento con nuevas tecnologías.
-    </p>
-    <p class="text-lg">
-      Cuando no estoy programando, me gusta tocar el piano y mirar series en
-      Netflix.
-    </p>
+    {paragraphs[lang].map((paragraph) => <p class="text-lg">{paragraph}</p>)}
     <p class="ml-auto text-muted italic w-fit whitespace-nowrap">
       Montevideo, Uruguay
     </p>

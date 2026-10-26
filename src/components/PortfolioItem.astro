@@ -1,6 +1,7 @@
 ---
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
+import { getLang, useTranslations } from "../i18n/ui";
 
 interface Props {
   title: string;
@@ -13,13 +14,15 @@ interface Props {
 
 const { title, description, image, status, stack, links } = Astro.props;
 
+const t = useTranslations(getLang(Astro.currentLocale));
+
 const isExternal = (href: string) => href.startsWith("http");
 ---
 
 <article class="flex flex-col gap-5 sm:flex-row sm:items-start">
   <Image
     src={image}
-    alt={`Logo de ${title}`}
+    alt={`${t("portfolio.logoAlt")} ${title}`}
     width={128}
     height={128}
     densities={[1, 2]}

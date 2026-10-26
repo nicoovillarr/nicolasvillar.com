@@ -1,68 +1,103 @@
 ---
+import { getLang, useTranslations, type Localized } from "../i18n/ui";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+
 const jobs: {
-  role: string;
+  role: Localized<string>;
   company: string;
-  period: string;
-  summary?: string;
-  achievements: string[];
+  period: Localized<string>;
+  summary?: Localized<string>;
+  achievements: Localized<string[]>;
   stack: string[];
 }[] = [
   {
-    role: "Desarrollador de Software Senior",
+    role: {
+      en: "Senior Software Developer",
+      es: "Desarrollador de Software Senior",
+    },
     company: "Kaizen Softworks",
-    period: "Marzo 2022 – Presente",
-    summary:
-      "Consultora de software enfocada en Estados Unidos. Trabajo integrado al equipo de Livingston International, una empresa norteamericana de despacho aduanero y cumplimiento comercial.",
-    achievements: [
-      "Soy el único referente técnico de un subproyecto crítico: requerimientos, entregas y soporte en producción. En 12 meses, los incidentes reportados por el cliente bajaron de unos 2 por semana a prácticamente cero.",
-      "Desarrollo y mantengo integraciones con agencias de gobierno de Estados Unidos y Canadá (CBP, CBSA), cuidando el cumplimiento regulatorio, la integridad de los datos y la disponibilidad.",
-      "Eliminé un problema de N+1 en un flujo automatizado central (unas 1.050 consultas a la base por ejecución) precargando los datos con table-valued parameters y JOINs en SQL Server: pasó de más de 5 minutos a menos de 15 segundos.",
-      "Introduje una suite de tests unitarios que detecta regresiones antes de cada deploy, y hago code reviews y demos técnicas quincenales para el cliente.",
-    ],
+    period: { en: "March 2022 – Present", es: "Marzo 2022 – Presente" },
+    summary: {
+      en: "US-focused software consultancy. I work embedded in the team at Livingston International, a North American customs brokerage and trade compliance company.",
+      es: "Consultora de software enfocada en Estados Unidos. Trabajo integrado al equipo de Livingston International, una empresa norteamericana de despacho aduanero y cumplimiento comercial.",
+    },
+    achievements: {
+      en: [
+        "Sole technical owner of a critical subproject: requirements, deliveries and production support. Over 12 months, client-reported incidents dropped from about 2 per week to virtually zero.",
+        "Build and maintain integrations with US and Canadian government agencies (CBP, CBSA), ensuring regulatory compliance, data integrity and availability.",
+        "Eliminated an N+1 problem in a core automated workflow (around 1,050 database queries per run) by preloading data with table-valued parameters and JOINs in SQL Server, cutting runtime from over 5 minutes to under 15 seconds.",
+        "Introduced a unit test suite that catches regressions before every deploy, and run code reviews and biweekly technical demos for the client.",
+      ],
+      es: [
+        "Soy el único referente técnico de un subproyecto crítico: requerimientos, entregas y soporte en producción. En 12 meses, los incidentes reportados por el cliente bajaron de unos 2 por semana a prácticamente cero.",
+        "Desarrollo y mantengo integraciones con agencias de gobierno de Estados Unidos y Canadá (CBP, CBSA), cuidando el cumplimiento regulatorio, la integridad de los datos y la disponibilidad.",
+        "Eliminé un problema de N+1 en un flujo automatizado central (unas 1.050 consultas a la base por ejecución) precargando los datos con table-valued parameters y JOINs en SQL Server: pasó de más de 5 minutos a menos de 15 segundos.",
+        "Introduje una suite de tests unitarios que detecta regresiones antes de cada deploy, y hago code reviews y demos técnicas quincenales para el cliente.",
+      ],
+    },
     stack: ["ASP.NET Core", "C#", "Angular", "RxJS", "SQL Server", "Azure Pipelines"],
   },
   {
-    role: "Contratista independiente",
+    role: { en: "Independent Contractor", es: "Contratista independiente" },
     company: "Marppa SAS",
-    period: "Octubre 2024 – Septiembre 2025",
-    achievements: [
-      "Diseñé y construí solo, de punta a punta, la plataforma de e-commerce y gestión de Fendis, un comercio local: UI/UX, base de datos, backend e infraestructura.",
-      "Implementé un checkout que envía el pedido por WhatsApp; las ventas subieron un 20% en el primer mes.",
-      "Armé un panel de administración con autenticación JWT, gestión de catálogo (categorías, variantes y precios) y subida de imágenes a S3. Después del lanzamiento, el cliente me encargó un segundo proyecto.",
-    ],
+    period: {
+      en: "October 2024 – September 2025",
+      es: "Octubre 2024 – Septiembre 2025",
+    },
+    achievements: {
+      en: [
+        "Single-handedly designed and built, end to end, the e-commerce and management platform for Fendis, a local retailer: UI/UX, database, backend and infrastructure.",
+        "Implemented a checkout that sends orders through WhatsApp; sales grew 20% in the first month.",
+        "Built an admin panel with JWT authentication, catalog management (categories, variants and pricing) and image uploads to S3. After launch, the client hired me for a second project.",
+      ],
+      es: [
+        "Diseñé y construí solo, de punta a punta, la plataforma de e-commerce y gestión de Fendis, un comercio local: UI/UX, base de datos, backend e infraestructura.",
+        "Implementé un checkout que envía el pedido por WhatsApp; las ventas subieron un 20% en el primer mes.",
+        "Armé un panel de administración con autenticación JWT, gestión de catálogo (categorías, variantes y precios) y subida de imágenes a S3. Después del lanzamiento, el cliente me encargó un segundo proyecto.",
+      ],
+    },
     stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "AWS S3", "Vercel"],
   },
   {
-    role: "Desarrollador de Software Jr.",
+    role: { en: "Junior Software Developer", es: "Desarrollador de Software Jr." },
     company: "Inetsat",
-    period: "Marzo 2020 – Marzo 2022",
-    achievements: [
-      "Diseñé parsers binarios y hexadecimales a medida para incorporar clientes de medios como Disney, Fox y AMC al modelo de datos de la plataforma.",
-      "Trabajé directamente con los clientes en ventanas de integración de una a dos semanas para relevar requerimientos y mapear sus formatos de datos.",
-      "Mejoré el rendimiento de consultas con LINQ y Entity Framework, y lideré el rediseño visual completo de la aplicación de escritorio.",
-    ],
+    period: { en: "March 2020 – March 2022", es: "Marzo 2020 – Marzo 2022" },
+    achievements: {
+      en: [
+        "Designed custom binary and hexadecimal parsers to onboard media clients such as Disney, Fox and AMC into the platform's data model.",
+        "Worked directly with clients during one- to two-week integration windows to gather requirements and map their data formats.",
+        "Improved query performance with LINQ and Entity Framework, and led the complete visual redesign of the desktop application.",
+      ],
+      es: [
+        "Diseñé parsers binarios y hexadecimales a medida para incorporar clientes de medios como Disney, Fox y AMC al modelo de datos de la plataforma.",
+        "Trabajé directamente con los clientes en ventanas de integración de una a dos semanas para relevar requerimientos y mapear sus formatos de datos.",
+        "Mejoré el rendimiento de consultas con LINQ y Entity Framework, y lideré el rediseño visual completo de la aplicación de escritorio.",
+      ],
+    },
     stack: ["C#", ".NET", "WPF", "MVVM", "Entity Framework"],
   },
 ];
 ---
 
 <section>
-  <h2 class="text-3xl font-semibold mb-8">Experiencia laboral</h2>
+  <h2 class="text-3xl font-semibold mb-8">{t("career.title")}</h2>
   <ol class="space-y-10">
     {
       jobs.map((job) => (
         <li class="space-y-3">
           <div>
             <h3 class="text-xl font-semibold">
-              {job.role} en {job.company}
+              {job.role[lang]} {t("career.at")} {job.company}
             </h3>
-            <p class="text-muted">{job.period}</p>
+            <p class="text-muted">{job.period[lang]}</p>
           </div>
 
-          {job.summary && <p class="text-lg">{job.summary}</p>}
+          {job.summary && <p class="text-lg">{job.summary[lang]}</p>}
 
           <ul class="list-disc space-y-2 pl-5 text-lg marker:text-muted">
-            {job.achievements.map((achievement) => (
+            {job.achievements[lang].map((achievement) => (
               <li>{achievement}</li>
             ))}
           </ul>
