@@ -2,6 +2,8 @@
 import { subjects } from "../consts";
 import Input from "./Input.astro";
 import Select from "./Select.astro";
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <section id="contact">
@@ -40,9 +42,31 @@ import Select from "./Select.astro";
       required
     />
 
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label for="website">Sitio web</label>
+      <input
+        type="text"
+        id="website"
+        name="website"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    {
+      turnstileSiteKey && (
+        <div
+          class="cf-turnstile mt-2 ml-auto"
+          data-sitekey={turnstileSiteKey}
+          data-language="es"
+        />
+      )
+    }
+
     <button
+      id="submit-button"
       type="submit"
-      class="mt-4 w-fit ml-auto bg-linear-to-br from-gray-800 to-gray-700 px-8 py-3 rounded-lg text-white cursor-pointer hover:opacity-90"
+      class="mt-4 w-fit ml-auto bg-linear-to-br from-gray-800 to-gray-700 px-8 py-3 rounded-lg text-white cursor-pointer hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
     >
       Enviar Mensaje
     </button>
@@ -51,32 +75,80 @@ import Select from "./Select.astro";
   </form>
 </section>
 
+{
+  turnstileSiteKey && (
+    <script
+      is:inline
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    />
+  )
+}
+
 <script>
+  type TurnstileWindow = Window & { turnstile?: { reset: () => void } };
+
   const form = document.getElementById("contact-form") as HTMLFormElement;
-  const statusMsg = document.getElementById("status-msg");
+  const statusMsg = document.getElementById("status-msg") as HTMLElement;
+  const submitButton = document.getElementById(
+    "submit-button"
+  ) as HTMLButtonElement;
+
+  const showStatus = (text: string) => {
+    statusMsg.textContent = text;
+    statusMsg.classList.remove("hidden");
+  };
+
+  const readErrorMessage = async (response: Response) => {
+    try {
+      const body = await response.json();
+      return typeof body?.message === "string" ? body.message : null;
+    } catch {
+      return null;
+    }
+  };
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const formData = new FormData(form);
 
-    const data = Object.fromEntries(formData);
+    if (submitButton.disabled) {
+      return;
+    }
 
-    statusMsg!.textContent = "Enviando...";
-    statusMsg!.classList.remove("hidden");
+    const data = Object.fromEntries(new FormData(form));
 
-    const response = await fetch("/api/send-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    submitButton.disabled = true;
+    showStatus("Enviando...");
 
-    if (response.ok) {
-      statusMsg!.textContent = "¡Gracias! Te responderé pronto.";
-      form.reset();
-    } else {
-      statusMsg!.textContent = "Hubo un error, intentá de nuevo.";
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        showStatus("¡Gracias! Te responderé pronto.");
+        form.reset();
+        form
+          .querySelectorAll("input, textarea")
+          .forEach((field) => field.dispatchEvent(new Event("input")));
+      } else {
+        const errorMessage = await readErrorMessage(response);
+        showStatus(
+          errorMessage
+            ? `${errorMessage}. Intentá de nuevo.`
+            : "Hubo un error, intentá de nuevo."
+        );
+      }
+    } catch {
+      showStatus("No hay conexión, intentá de nuevo en unos minutos.");
+    } finally {
+      submitButton.disabled = false;
+      (window as TurnstileWindow).turnstile?.reset();
     }
   });
 </script>

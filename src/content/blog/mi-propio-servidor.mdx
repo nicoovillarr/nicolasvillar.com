@@ -10,17 +10,17 @@ enabled: true
 
 Desde hace muchos años intento incursionar en la nube. Comencé comprando suscripciones anuales en Hostinger, cuando recién aprendía PHP—lenguaje al que le guardo mucho cariño. También descubrí el mundo de los _Cloud Computing_, donde creé instancias en AWS y GCP. Por otro lado, hace menos de un año descubrí Vercel y similares: productos como servicios que facilitan enormemente el despliegue de aplicaciones web. Pero, ¿qué hacen internamente?
 
-# Motivación
+## Motivación
 
 Mi idea principal era tener un entorno de pruebas que no dependa de gastos innecesarios o facturas que me agarren por sorpresa. En AWS, una instancia de EC2 no genera costos si está apagada. Pero, ¿sabías que las IP elásticas en AWS generan un costo silencioso cuando no se usan? Y desde ahí, existen un montón de ejemplos más: ha habido casos donde Vercel envía facturas gigantescas por uso de red a usuarios luego de ataques o picos de tráfico inesperados (incluyendo _DDoS_).
 
 La motivación de este proyecto nunca fue reemplazar ninguna de estas soluciones. Nunca se me pasaría por la cabeza competir con _hyperscalers_. Pero si me interesó la idea de tener un entorno personal en la nube, donde pueda levantar aplicaciones de uso propio (o familiar), y no me preocupe por gastos repentinos más allá de un incremento en la factura de la luz.
 
-## Objetivos iniciales
+### Objetivos iniciales
 
 En realidad, en un inicio no tenía un _roadmap_ claro. Simplemente tenía el "capricho" de tener mi propia infraestructura y no depender de nadie. Lo que más tenía ganas era hospedar mi propio _Google Drive_ en la nube. Es por esto que, lo primero que hice ni bien entendí qué estaba haciendo, fue desplegar [NextCloud](https://nextcloud.com/). Curiosamente, en el proceso me enteré que estaba escrito en PHP, por lo que pude fácilmente clonar el repositorio y hacer mis propias modificaciones.
 
-# Elección de hardware
+## Elección de hardware
 
 Durante el inicio, lo último que quería era gastar decenas de miles de dólares. Un servidor de un datacenter real, puede llegar a costar más de diez mil dólares. Mi alcance era mucho menor, no solo porque no tenía ese dinero, sino porque sentía que no lo valía para lo que yo quería hacer. Entonces, intenté buscar componentes de fácil acceso al público, al mismo tiempo de que sean lo suficientemente potentes como para poder explotarlos sin quedarme corto.
 
@@ -43,7 +43,7 @@ _(Precios estimados on-demand en sudamérica, con 730 horas por mes aproximadame
 
 **Nota**: recordemos que mi objetivo nunca fue suplantarlos ni desplegar aplicaciones de producción en mi servidor; pero comparar precios es interesante para ver lo "barato" que es tener un servidor físico vs. contratar servicios de _cloud computing_, desde una visión muy simplificada.
 
-# Windows Server: por qué lo elegí y por qué lo abandoné
+## Windows Server: por qué lo elegí y por qué lo abandoné
 
 Mi primera experiencia laboral fue utilizando _ASP.Net_ y _Blazor_, y comencé a sentirme muy cómodo con el entorno de Windows Server, Visual Studio e IIS.
 
@@ -51,15 +51,15 @@ Al poco tiempo de instalar mi servidor, un amigo mío me pidió que le desarroll
 
 Si bien Microsoft ofrecía una excelente interfaz gráfica para el mantenimiento de un servidor con aplicaciones web, exigía no solo que dicho Windows Server cuente con una licencia, sino que su ecosistema de licencias de Microsoft se volvió un problema real. Y mi primer pensamiento fue: "yo uso _ASP.Net_", y en ese momento, mi percepción (y mi experiencia) era que _ASP.Net_ no se llevaba bien con Linux, por lo que me casé con Windows Server.
 
-## Problemas que ocurrieron
+### Problemas que ocurrieron
 
-### Recursos
+#### Recursos
 
 Resulta que—por sorpresa de nadie—Windows incurre en un montón de recursos innecesariamente. Hay bastantes servicios corriendo en segundo plano, interfaz gráfica, telemetría, etc.
 
 Tenía ganas de instalar [Metricbeat](https://www.elastic.co/beats/metricbeat) de Elastic Stack. ¿La mala noticia? De por sí Windows Server gastaba un montón de RAM—sumale el uso de Metricbeat... No quedaba margen para muchas máquinas virtuales ni aplicaciones para hospedar.
 
-### Licencia del server vs. licencias de acceso remoto
+#### Licencia del server vs. licencias de acceso remoto
 
 Microsoft separa el derecho a tener un servidor del derecho de usarlo. Te cobran por cores, el servidor inicia pero aún no tenés la posibilidad de ingresar.
 
@@ -67,19 +67,19 @@ Es ahí donde ingresan las _CALs_ (o permiso para respirar). Estas habilitan per
 
 Y no hablemos del RDS, eso ya es un abuso total: doble peaje.
 
-### Razón principal para irme de Windows Server
+#### Razón principal para irme de Windows Server
 
 Mi objetivo era tener una nube, donde no reciba gastos inesperados y pueda entrar y ejecutar todo lo que quiera sin que nadie me diga qué puedo o no hacer.
 
 Es por esto que decidí que Windows no ofrecía la libertad que yo estaba buscando desde un inicio.
 
-## Migración a Debian
+### Migración a Debian
 
 Mi siguiente opción era Linux. En mi PC personal tengo dual-boot de Windows y Ubuntu (un poco porque me gusta sentirme hacker haciendo todo por terminal), por lo que el entorno Unix no era nuevo para mi. No existe una buena razón por la que opté por Debian, sino más bien porque vi que tiene una gran comunidad y buenas opiniones por su uso en servidores.
 
 Por suerte—tanto para mí como para mi amigo—la aplicación web que le hice comenzó a crecer, por lo que tomé la decisión de migrar todo a NextJS y lo desplegamos en Vercel. Esto significó que mi servidor ya estaba libre de responsabilidades reales ni aplicaciones en producción, por lo que pude tomarme el tiempo de quitar Windows Server e instalar Debian, así como familiarizarme con este nuevo ambiente.
 
-# Seguridad (lo mínimo indispensable)
+## Seguridad (lo mínimo indispensable)
 
 Lo que más me daba miedo eran los ataques _DDoS_, pues un ataque de ese estilo no solo tiraría mi red, sino que destruiría el ancho de banda en mi hogar, haciendo que la velocidad de mi internet se viera reducida durante lo que reste del mes. Dicho esto, lo que hice desde un inicio fue usar CloudFlare como barrera de entrada. Desde ahí ya tengo una mínima seguridad frente a picos de tráfico y puedo configurar estados como "bajo ataque" para bloquear bots. El único problema aquí, es que Cloudflare solo bloquea ataques _DDoS_ en el tráfico que pasa por su red (en mi caso, solo _HTTP_ y _HTTPS_). Si mandan miles de requests a algún otro puerto que deje abierto, queda en mi responsabilidad y configuración el lograr mitigarlo.
 
@@ -91,13 +91,13 @@ Además, el acceso por _SSH_ se puede hacer únicamente desde mi red local, por 
 
 Finalmente, cada página está en máquinas virtuales en otras subredes utilizando: virt-install, nftables y dhcp, entre otras herramientas. Con nftables configuré que estas subredes no puedan abrir conexiones directas con otras máquinas fuera de su subred con _connection tracking_. Esto permite siempre el tráfico _ESTABLISHED_, _RELATED_ y se bloquean solo las conexiones _NEW_ iniciadas desde la subred restringida hacia otras zonas. Así la subred no puede abrir conexiones, pero sí responder a las que fueron iniciadas desde afuera.
 
-# IP dinámica
+## IP dinámica
 
 Para poder acceder a las aplicaciones hospedadas en mi servidor, una dificultad fue mi contrato de internet con ANTEL. Cada 12 horas (aproximadamente) mi IP pública cambia, por lo que apuntar mis hostnames a mi IP funcionaba solo durante un corto periodo de tiempo. Hablando con un conocido sobre este proyecto que estaba haciendo, me comentó que existían servicios de DDNS, un mundo nuevo para mi en ese entonces. Es ahí donde encontré [Dynu](https://www.dynu.com/), un servicio de DNS dinámico gratuito, que además ofrece hostnames sin incurrir en un costo extra; genial para pruebas.
 
 Luego de unos meses de uso, comencé a analizar cómo funcionaba el mecanismo de Dynu, y era algo sencillísimo. Periódicamente consultaba mi IP pública, y si era distinta a la última usada, actualizaba los registros DNS. Es ahí cuando quise unificar todo con Cloudflare, e investigué cómo funciona su API. Finalmente, escribí un script simple que hace exactamente lo mismo, pero actualizando el DNS de Cloudflare, dejando atrás el servicio de Dynu.
 
-# Qué estoy corriendo hoy en el servidor
+## Qué estoy corriendo hoy en el servidor
 
 Actualmente, mi servidor no está ejecutando nada productivo ni serio. Lo estoy usando por sobre todo para hospedar otras aplicaciones que estoy desarrollando y quiera mostrar al público (generalmente amigos y familiares) sin tener que pagar instancias en AWS o consumir los tiers gratuitos como el de Vercel.
 
@@ -105,11 +105,11 @@ Además, tengo una base de datos PostgreSQL donde puedo almacenar información d
 
 Es una nube bastante amateur, para cosas personales que no precisen super estabilidad, SLAs o la que accedan demasiadas personas.
 
-# Ideas a futuro
+## Ideas a futuro
 
 A futuro tengo ganas de comenzar a hospedar aplicaciones a las que le pueda sacar más provecho, como por ejemplo volver a un _Drive_ personal (NextCloud no me gustó). Además, estoy trabajando en una especie de panel de control personal. Mi objetivo es automatizar todo lo que aprendí a hacer a mano: desde lanzar máquinas virtuales con virt-install hasta configurar las reglas de nftables y el DHCP sin tocar la terminal cada vez.
 
-# Conclusión
+## Conclusión
 
 Este proyecto me hizo pensar en muchísimas cosas que muchos desarrolladores dan por sentado. Desde el análisis de precio de hardware, hasta la evaluación de productos y servicios que me ayuden a desplegar aplicaciones en infraestructura propia. Tuve que pensar sobre el acceso WAN, puertos, IP dinámica, gestión de recursos, virtualización, seguridad, y varios detalles más que suelen quedar ocultos cuando uno crea una instancia en AWS o GCP.
 
