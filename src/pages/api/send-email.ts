@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { Resend } from "resend";
 import { subjects } from "../../consts";
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
+export const prerender = false;
 
 const TURNSTILE_VERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
@@ -99,6 +99,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return jsonResponse({ message: "Asunto inválido" }, 400);
   }
 
+  const resendApiKey = import.meta.env.RESEND_API_KEY;
+
+  if (!resendApiKey) {
+    console.error("Falta RESEND_API_KEY");
+    return jsonResponse({ message: "El formulario no está disponible" }, 503);
+  }
+
   try {
     if (!(await verifyTurnstile(turnstileToken, clientAddress))) {
       return jsonResponse(
@@ -107,7 +114,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       );
     }
 
-    const { error } = await resend.emails.send({
+    const { error } = await new Resend(resendApiKey).emails.send({
       from: "Nicolás Villar <yo@nicolasvillar.com>",
       to: "yo@nicolasvillar.com",
       subject: `${subject} | nicolasvillar.com`,

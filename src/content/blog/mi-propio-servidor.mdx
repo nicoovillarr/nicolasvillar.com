@@ -2,9 +2,8 @@
 title: "Mi servidor personal no es una buena idea (y por eso lo hice)"
 description: "Armar un servidor propio parece innecesario desde afuera, pero desde adentro es una fuente constante de aprendizaje y fricción. En este post, recorro mi transición desde los servicios de nube tradicionales y las limitaciones de Windows Server hacia un entorno propio basado en Debian. Te cuento cómo gestioné el hardware, la seguridad frente a ataques y la red con IP dinámica, no para competir con los gigantes de la industria, sino para entender—a baja escala—cómo funcionan realmente los centros de datos."
 category: "Tecnología"
-timeToRead: 12
 pubDate: "2025-12-21"
-tags: ["Servidor Personal", "Tecnología", "Reflexiones"]
+tags: ["Servidor Personal", "Reflexiones"]
 enabled: true
 ---
 
@@ -14,7 +13,7 @@ Desde hace muchos años intento incursionar en la nube. Comencé comprando suscr
 
 Mi idea principal era tener un entorno de pruebas que no dependa de gastos innecesarios o facturas que me agarren por sorpresa. En AWS, una instancia de EC2 no genera costos si está apagada. Pero, ¿sabías que las IP elásticas en AWS generan un costo silencioso cuando no se usan? Y desde ahí, existen un montón de ejemplos más: ha habido casos donde Vercel envía facturas gigantescas por uso de red a usuarios luego de ataques o picos de tráfico inesperados (incluyendo _DDoS_).
 
-La motivación de este proyecto nunca fue reemplazar ninguna de estas soluciones. Nunca se me pasaría por la cabeza competir con _hyperscalers_. Pero si me interesó la idea de tener un entorno personal en la nube, donde pueda levantar aplicaciones de uso propio (o familiar), y no me preocupe por gastos repentinos más allá de un incremento en la factura de la luz.
+La motivación de este proyecto nunca fue reemplazar ninguna de estas soluciones. Nunca se me pasaría por la cabeza competir con _hyperscalers_. Pero sí me interesó la idea de tener un entorno personal en la nube, donde pueda levantar aplicaciones de uso propio (o familiar), y no me preocupe por gastos repentinos más allá de un incremento en la factura de la luz.
 
 ### Objetivos iniciales
 
@@ -75,7 +74,7 @@ Es por esto que decidí que Windows no ofrecía la libertad que yo estaba buscan
 
 ### Migración a Debian
 
-Mi siguiente opción era Linux. En mi PC personal tengo dual-boot de Windows y Ubuntu (un poco porque me gusta sentirme hacker haciendo todo por terminal), por lo que el entorno Unix no era nuevo para mi. No existe una buena razón por la que opté por Debian, sino más bien porque vi que tiene una gran comunidad y buenas opiniones por su uso en servidores.
+Mi siguiente opción era Linux. En mi PC personal tengo dual-boot de Windows y Ubuntu (un poco porque me gusta sentirme hacker haciendo todo por terminal), por lo que el entorno Unix no era nuevo para mí. No existe una buena razón por la que opté por Debian, sino más bien porque vi que tiene una gran comunidad y buenas opiniones por su uso en servidores.
 
 Por suerte—tanto para mí como para mi amigo—la aplicación web que le hice comenzó a crecer, por lo que tomé la decisión de migrar todo a NextJS y lo desplegamos en Vercel. Esto significó que mi servidor ya estaba libre de responsabilidades reales ni aplicaciones en producción, por lo que pude tomarme el tiempo de quitar Windows Server e instalar Debian, así como familiarizarme con este nuevo ambiente.
 
@@ -93,7 +92,7 @@ Finalmente, cada página está en máquinas virtuales en otras subredes utilizan
 
 ## IP dinámica
 
-Para poder acceder a las aplicaciones hospedadas en mi servidor, una dificultad fue mi contrato de internet con ANTEL. Cada 12 horas (aproximadamente) mi IP pública cambia, por lo que apuntar mis hostnames a mi IP funcionaba solo durante un corto periodo de tiempo. Hablando con un conocido sobre este proyecto que estaba haciendo, me comentó que existían servicios de DDNS, un mundo nuevo para mi en ese entonces. Es ahí donde encontré [Dynu](https://www.dynu.com/), un servicio de DNS dinámico gratuito, que además ofrece hostnames sin incurrir en un costo extra; genial para pruebas.
+Para poder acceder a las aplicaciones hospedadas en mi servidor, una dificultad fue mi contrato de internet con ANTEL. Cada 12 horas (aproximadamente) mi IP pública cambia, por lo que apuntar mis hostnames a mi IP funcionaba solo durante un corto periodo de tiempo. Hablando con un conocido sobre este proyecto que estaba haciendo, me comentó que existían servicios de DDNS, un mundo nuevo para mí en ese entonces. Es ahí donde encontré [Dynu](https://www.dynu.com/), un servicio de DNS dinámico gratuito, que además ofrece hostnames sin incurrir en un costo extra; genial para pruebas.
 
 Luego de unos meses de uso, comencé a analizar cómo funcionaba el mecanismo de Dynu, y era algo sencillísimo. Periódicamente consultaba mi IP pública, y si era distinta a la última usada, actualizaba los registros DNS. Es ahí cuando quise unificar todo con Cloudflare, e investigué cómo funciona su API. Finalmente, escribí un script simple que hace exactamente lo mismo, pero actualizando el DNS de Cloudflare, dejando atrás el servicio de Dynu.
 
@@ -103,7 +102,7 @@ Actualmente, mi servidor no está ejecutando nada productivo ni serio. Lo estoy 
 
 Además, tengo una base de datos PostgreSQL donde puedo almacenar información de desarrollo o pruebas compartida entre diferentes dispositivos: si estoy desarrollando algo en mi PC personal, puedo acceder a la misma información si un día tengo que hacerlo desde una laptop.
 
-Es una nube bastante amateur, para cosas personales que no precisen super estabilidad, SLAs o la que accedan demasiadas personas.
+Es una nube bastante amateur, para cosas personales que no precisen super estabilidad, SLAs o a la que accedan demasiadas personas.
 
 ## Ideas a futuro
 

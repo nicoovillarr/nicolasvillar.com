@@ -4,27 +4,27 @@ import FormattedDate from "./FormattedDate.astro";
 import TagBox from "./TagBox.astro";
 import Prose from "./Prose.astro";
 
-type Props = CollectionEntry<"blog">["data"];
-const { title, description, category, timeToRead, pubDate, updatedDate, tags } =
+type Props = CollectionEntry<"blog">["data"] & { minutesToRead: number };
+const { title, description, category, minutesToRead, pubDate, updatedDate, tags } =
   Astro.props;
 ---
 
 <article class="content">
-  <header class="mb-12 pb-12 border-b border-gray-300">
+  <header class="mb-12 pb-12 border-b border-gray-300 dark:border-gray-700">
     <aside class="flex text-muted mb-2">
       <FormattedDate date={pubDate} />
       <span class="mx-2">•</span>
-      <span>{timeToRead} min</span>
+      <span>{minutesToRead} min de lectura</span>
     </aside>
 
     <Prose>
       <h1>{title}</h1>
 
-      <p class="description text-gray-600">{description}</p>
+      <p class="description text-muted">{description}</p>
 
       {
         updatedDate && updatedDate.getTime() !== pubDate.getTime() ? (
-          <p class="text-sm text-gray-500 mt-2">
+          <p class="text-sm text-muted mt-2">
             Última actualización: <FormattedDate date={updatedDate} />
           </p>
         ) : null
@@ -33,7 +33,9 @@ const { title, description, category, timeToRead, pubDate, updatedDate, tags } =
 
     <aside class="flex flex-wrap gap-2 mt-8">
       {category && <TagBox tag={category} isPrimary={true} />}
-      {tags?.map((tag) => <TagBox tag={tag} />)}
+      {tags
+        ?.filter((tag) => tag !== category)
+        .map((tag) => <TagBox tag={tag} />)}
     </aside>
   </header>
   <Prose>

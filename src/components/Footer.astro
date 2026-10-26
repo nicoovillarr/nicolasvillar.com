@@ -1,12 +1,27 @@
 ---
+import { CONTACT_EMAIL } from "../consts";
 import FooterLinks from "./FooterLinks.astro";
 ---
 
-<footer class="border-t border-gray-400 py-8">
-  <div class="mx-auto content h-full flex justify-between gap-x-4">
+<footer class="border-t border-gray-300 py-8 dark:border-gray-700">
+  <div class="content h-full flex flex-wrap justify-between gap-x-4 gap-y-6">
     <div>
-      <p class="text-sm text-gray-600">
-        © {new Date().getFullYear()} Nicolás Villar. Algunos derechos reservados.
+      <p class="text-sm text-muted">
+        © {new Date().getFullYear()} Nicolás Villar. Todos los derechos reservados.
+      </p>
+      <p class="mt-2 flex gap-x-4 text-sm">
+        <a
+          href="/privacidad"
+          class="text-gray-600 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-gray-100"
+          >Privacidad</a
+        >
+        <button
+          type="button"
+          data-cookie-preferences
+          class="cursor-pointer text-gray-600 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-gray-100"
+        >
+          Cookies
+        </button>
       </p>
     </div>
 
@@ -27,7 +42,7 @@ import FooterLinks from "./FooterLinks.astro";
           text: "LinkedIn",
           href: "https://www.linkedin.com/in/nicol%C3%A1s-villar/",
         },
-        { text: "yo@nicolasvillar.com", href: "mailto:yo@nicolasvillar.com" },
+        { text: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
       ]}
     />
   </div>

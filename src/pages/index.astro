@@ -4,11 +4,11 @@ import Contact from "../components/Contact.astro";
 import Hero from "../components/Hero.astro";
 import Layout from "../components/Layout.astro";
 import Now from "../components/Now.astro";
-import { SITE_TITLE } from "../consts";
+import { SITE_ROLE, SITE_TITLE } from "../consts";
 import PortfolioList from "../components/PortfolioList.astro";
 ---
 
-<Layout title={`Desarrollador Web Full-Stack | ${SITE_TITLE}`}>
+<Layout title={`${SITE_TITLE} | ${SITE_ROLE}`}>
   <main class="content">
     <Hero />
 

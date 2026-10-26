@@ -13,7 +13,7 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://nicolasvillar.com",
 
-  output: "server",
+  output: "static",
   adapter: vercel(),
 
   vite: {
