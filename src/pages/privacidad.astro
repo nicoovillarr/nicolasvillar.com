@@ -32,15 +32,30 @@ const updatedAt = new Date("2026-10-26");
         <code>_ga</code> y <code>_ga_*</code> en tu navegador. Si rechazás, Google
         Analytics no se carga.
       </p>
+
+      <h2 id="cookies" class="scroll-mt-8">Tus preferencias de cookies</h2>
       <p>
-        Podés cambiar tu elección cuando quieras desde el botón
+        Estado actual: <strong data-consent-status>sin elegir todavía</strong>.
+        Podés cambiarlo cuando quieras:
+      </p>
+      <div data-consent-controls class="not-prose flex flex-wrap gap-3">
         <button
           type="button"
-          data-cookie-preferences
-          class="cursor-pointer text-blue-700 underline dark:text-blue-400"
-          >Cookies</button
-        >, que también está en el pie de página.
-      </p>
+          data-consent="granted"
+          aria-pressed="false"
+          class="cursor-pointer rounded-lg border border-gray-400 px-5 py-2 hover:bg-gray-100 aria-pressed:border-gray-800 aria-pressed:bg-gray-800 aria-pressed:text-white dark:border-gray-600 dark:hover:bg-gray-800 dark:aria-pressed:border-gray-100 dark:aria-pressed:bg-gray-100 dark:aria-pressed:text-gray-900"
+        >
+          Aceptar cookies
+        </button>
+        <button
+          type="button"
+          data-consent="denied"
+          aria-pressed="false"
+          class="cursor-pointer rounded-lg border border-gray-400 px-5 py-2 hover:bg-gray-100 aria-pressed:border-gray-800 aria-pressed:bg-gray-800 aria-pressed:text-white dark:border-gray-600 dark:hover:bg-gray-800 dark:aria-pressed:border-gray-100 dark:aria-pressed:bg-gray-100 dark:aria-pressed:text-gray-900"
+        >
+          Rechazar cookies
+        </button>
+      </div>
 
       <h2>Formulario de contacto</h2>
       <p>

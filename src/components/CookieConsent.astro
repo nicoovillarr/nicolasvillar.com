@@ -42,6 +42,11 @@ import { GA_MEASUREMENT_ID } from "../consts";
   };
 
   const STORAGE_KEY = "analytics-consent";
+  const STATUS_LABELS: Record<Consent | "pending", string> = {
+    granted: "aceptadas",
+    denied: "rechazadas",
+    pending: "sin elegir todavía",
+  };
 
   const banner = document.getElementById("cookie-consent") as HTMLElement;
   const measurementId = banner.dataset.measurementId!;
@@ -108,27 +113,39 @@ import { GA_MEASUREMENT_ID } from "../consts";
     }
   };
 
-  const showBanner = () => banner.classList.remove("hidden");
-  const hideBanner = () => banner.classList.add("hidden");
+  const renderStatus = (consent: Consent | null) => {
+    document
+      .querySelectorAll<HTMLElement>("[data-consent-status]")
+      .forEach((status) => {
+        status.textContent = STATUS_LABELS[consent ?? "pending"];
+      });
 
-  banner.querySelectorAll<HTMLButtonElement>("[data-consent]").forEach((button) =>
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-consent-controls] [data-consent]")
+      .forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.consent === consent)
+        );
+      });
+  };
+
+  document.querySelectorAll<HTMLButtonElement>("[data-consent]").forEach((button) =>
     button.addEventListener("click", () => {
       const consent = button.dataset.consent as Consent;
       saveConsent(consent);
       applyConsent(consent);
-      hideBanner();
+      renderStatus(consent);
+      banner.classList.add("hidden");
     })
   );
 
-  document.querySelectorAll("[data-cookie-preferences]").forEach((trigger) =>
-    trigger.addEventListener("click", showBanner)
-  );
-
   const storedConsent = readConsent();
+  renderStatus(storedConsent);
 
   if (storedConsent) {
     applyConsent(storedConsent);
   } else {
-    showBanner();
+    banner.classList.remove("hidden");
   }
 </script>
